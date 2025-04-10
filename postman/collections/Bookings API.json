@@ -53,8 +53,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/users/:userId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["users", ":userId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":userId"
+                  ],
                   "variable": [
                     {
                       "key": "userId",
@@ -78,8 +83,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/users/:userId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["users", ":userId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":userId"
+                      ],
                       "variable": [
                         {
                           "key": "userId",
@@ -109,8 +119,13 @@
                     "header": [],
                     "url": {
                       "raw": "{{baseUrl}}/users/:userId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["users", ":userId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":userId"
+                      ],
                       "variable": [
                         {
                           "key": "userId",
@@ -174,8 +189,13 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/users/:userId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["users", ":userId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":userId"
+                  ],
                   "variable": [
                     {
                       "key": "userId",
@@ -209,8 +229,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/users/:userId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["users", ":userId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":userId"
+                      ],
                       "variable": [
                         {
                           "key": "userId",
@@ -255,8 +280,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/users/:userId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["users", ":userId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":userId"
+                      ],
                       "variable": [
                         {
                           "key": "userId",
@@ -301,8 +331,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/users/:userId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["users", ":userId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":userId"
+                      ],
                       "variable": [
                         {
                           "key": "userId",
@@ -357,8 +392,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/users/:userId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["users", ":userId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    ":userId"
+                  ],
                   "variable": [
                     {
                       "key": "userId",
@@ -383,8 +423,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/users/:userId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["users", ":userId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":userId"
+                      ],
                       "variable": [
                         {
                           "key": "userId",
@@ -420,8 +465,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/users/:userId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["users", ":userId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        ":userId"
+                      ],
                       "variable": [
                         {
                           "key": "userId",
@@ -482,12 +532,21 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
               }
             ],
             "url": {
               "raw": "{{baseUrl}}/users",
-              "host": ["{{baseUrl}}"],
-              "path": ["users"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
             }
           },
           "response": [
@@ -504,8 +563,12 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/users",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["users"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
                 }
               },
               "status": "OK",
@@ -562,8 +625,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/users",
-              "host": ["{{baseUrl}}"],
-              "path": ["users"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
             }
           },
           "response": [
@@ -590,8 +657,12 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/users",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["users"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
                 }
               },
               "status": "Created",
@@ -657,8 +728,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/hosts/:hostId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["hosts", ":hostId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hosts",
+                    ":hostId"
+                  ],
                   "variable": [
                     {
                       "key": "hostId",
@@ -682,8 +758,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/hosts/:hostId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["hosts", ":hostId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "hosts",
+                        ":hostId"
+                      ],
                       "variable": [
                         {
                           "key": "hostId",
@@ -713,8 +794,13 @@
                     "header": [],
                     "url": {
                       "raw": "{{baseUrl}}/hosts/:hostId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["hosts", ":hostId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "hosts",
+                        ":hostId"
+                      ],
                       "variable": [
                         {
                           "key": "hostId",
@@ -778,8 +864,13 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/hosts/:hostId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["hosts", ":hostId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hosts",
+                    ":hostId"
+                  ],
                   "variable": [
                     {
                       "key": "hostId",
@@ -813,8 +904,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/hosts/:hostId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["hosts", ":hostId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "hosts",
+                        ":hostId"
+                      ],
                       "variable": [
                         {
                           "key": "hostId",
@@ -859,8 +955,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/hosts/:hostId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["hosts", ":hostId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "hosts",
+                        ":hostId"
+                      ],
                       "variable": [
                         {
                           "key": "hostId",
@@ -905,8 +1006,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/hosts/:hostId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["hosts", ":hostId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "hosts",
+                        ":hostId"
+                      ],
                       "variable": [
                         {
                           "key": "hostId",
@@ -961,8 +1067,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/hosts/:hostId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["hosts", ":hostId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hosts",
+                    ":hostId"
+                  ],
                   "variable": [
                     {
                       "key": "hostId",
@@ -987,8 +1098,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/hosts/:hostId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["hosts", ":hostId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "hosts",
+                        ":hostId"
+                      ],
                       "variable": [
                         {
                           "key": "hostId",
@@ -1024,8 +1140,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/hosts/:hostId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["hosts", ":hostId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "hosts",
+                        ":hostId"
+                      ],
                       "variable": [
                         {
                           "key": "hostId",
@@ -1085,12 +1206,21 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
               }
             ],
             "url": {
               "raw": "{{baseUrl}}/hosts",
-              "host": ["{{baseUrl}}"],
-              "path": ["hosts"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hosts"
+              ]
             }
           },
           "response": [
@@ -1107,8 +1237,12 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/hosts",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["hosts"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hosts"
+                  ]
                 }
               },
               "status": "OK",
@@ -1165,8 +1299,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/hosts",
-              "host": ["{{baseUrl}}"],
-              "path": ["hosts"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "hosts"
+              ]
             }
           },
           "response": [
@@ -1193,8 +1331,12 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/hosts",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["hosts"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "hosts"
+                  ]
                 }
               },
               "status": "Created",
@@ -1261,8 +1403,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/properties/:propertyId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["properties", ":propertyId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "properties",
+                    ":propertyId"
+                  ],
                   "variable": [
                     {
                       "key": "propertyId",
@@ -1286,8 +1433,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/properties/:propertyId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["properties", ":propertyId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "properties",
+                        ":propertyId"
+                      ],
                       "variable": [
                         {
                           "key": "propertyId",
@@ -1317,8 +1469,13 @@
                     "header": [],
                     "url": {
                       "raw": "{{baseUrl}}/properties/:propertyId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["properties", ":propertyId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "properties",
+                        ":propertyId"
+                      ],
                       "variable": [
                         {
                           "key": "propertyId",
@@ -1382,8 +1539,13 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/properties/:propertyId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["properties", ":propertyId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "properties",
+                    ":propertyId"
+                  ],
                   "variable": [
                     {
                       "key": "propertyId",
@@ -1417,8 +1579,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/properties/:propertyId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["properties", ":propertyId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "properties",
+                        ":propertyId"
+                      ],
                       "variable": [
                         {
                           "key": "propertyId",
@@ -1463,8 +1630,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/properties/:propertyId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["properties", ":propertyId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "properties",
+                        ":propertyId"
+                      ],
                       "variable": [
                         {
                           "key": "propertyId",
@@ -1509,8 +1681,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/properties/:propertyId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["properties", ":propertyId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "properties",
+                        ":propertyId"
+                      ],
                       "variable": [
                         {
                           "key": "propertyId",
@@ -1565,8 +1742,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/properties/:propertyId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["properties", ":propertyId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "properties",
+                    ":propertyId"
+                  ],
                   "variable": [
                     {
                       "key": "propertyId",
@@ -1591,8 +1773,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/properties/:propertyId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["properties", ":propertyId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "properties",
+                        ":propertyId"
+                      ],
                       "variable": [
                         {
                           "key": "propertyId",
@@ -1628,8 +1815,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/properties/:propertyId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["properties", ":propertyId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "properties",
+                        ":propertyId"
+                      ],
                       "variable": [
                         {
                           "key": "propertyId",
@@ -1704,12 +1896,21 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
               }
             ],
             "url": {
               "raw": "{{baseUrl}}/properties",
-              "host": ["{{baseUrl}}"],
-              "path": ["properties"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "properties"
+              ]
             }
           },
           "response": [
@@ -1726,8 +1927,12 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/properties",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["properties"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "properties"
+                  ]
                 }
               },
               "status": "OK",
@@ -1784,8 +1989,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/properties",
-              "host": ["{{baseUrl}}"],
-              "path": ["properties"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "properties"
+              ]
             }
           },
           "response": [
@@ -1812,8 +2021,12 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/properties",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["properties"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "properties"
+                  ]
                 }
               },
               "status": "Created",
@@ -1895,8 +2108,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/amenities/:amenityId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["amenities", ":amenityId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "amenities",
+                    ":amenityId"
+                  ],
                   "variable": [
                     {
                       "key": "amenityId",
@@ -1920,8 +2138,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/amenities/:amenityId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["amenities", ":amenityId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "amenities",
+                        ":amenityId"
+                      ],
                       "variable": [
                         {
                           "key": "amenityId",
@@ -1951,8 +2174,13 @@
                     "header": [],
                     "url": {
                       "raw": "{{baseUrl}}/amenities/:amenityId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["amenities", ":amenityId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "amenities",
+                        ":amenityId"
+                      ],
                       "variable": [
                         {
                           "key": "amenityId",
@@ -2016,8 +2244,13 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/amenities/:amenityId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["amenities", ":amenityId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "amenities",
+                    ":amenityId"
+                  ],
                   "variable": [
                     {
                       "key": "amenityId",
@@ -2051,8 +2284,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/amenities/:amenityId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["amenities", ":amenityId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "amenities",
+                        ":amenityId"
+                      ],
                       "variable": [
                         {
                           "key": "amenityId",
@@ -2097,8 +2335,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/amenities/:amenityId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["amenities", ":amenityId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "amenities",
+                        ":amenityId"
+                      ],
                       "variable": [
                         {
                           "key": "amenityId",
@@ -2143,8 +2386,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/amenities/:amenityId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["amenities", ":amenityId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "amenities",
+                        ":amenityId"
+                      ],
                       "variable": [
                         {
                           "key": "amenityId",
@@ -2199,8 +2447,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/amenities/:amenityId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["amenities", ":amenityId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "amenities",
+                    ":amenityId"
+                  ],
                   "variable": [
                     {
                       "key": "amenityId",
@@ -2225,8 +2478,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/amenities/:amenityId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["amenities", ":amenityId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "amenities",
+                        ":amenityId"
+                      ],
                       "variable": [
                         {
                           "key": "amenityId",
@@ -2262,8 +2520,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/amenities/:amenityId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["amenities", ":amenityId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "amenities",
+                        ":amenityId"
+                      ],
                       "variable": [
                         {
                           "key": "amenityId",
@@ -2361,12 +2624,21 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
               }
             ],
             "url": {
               "raw": "{{baseUrl}}/amenities",
-              "host": ["{{baseUrl}}"],
-              "path": ["amenities"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "amenities"
+              ]
             }
           },
           "response": [
@@ -2383,8 +2655,12 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/amenities",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["amenities"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "amenities"
+                  ]
                 }
               },
               "status": "OK",
@@ -2441,8 +2717,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/amenities",
-              "host": ["{{baseUrl}}"],
-              "path": ["amenities"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "amenities"
+              ]
             }
           },
           "response": [
@@ -2469,8 +2749,12 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/amenities",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["amenities"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "amenities"
+                  ]
                 }
               },
               "status": "Created",
@@ -2550,8 +2834,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/bookings/:bookingId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["bookings", ":bookingId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "bookings",
+                    ":bookingId"
+                  ],
                   "variable": [
                     {
                       "key": "bookingId",
@@ -2575,8 +2864,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/bookings/:bookingId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["bookings", ":bookingId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "bookings",
+                        ":bookingId"
+                      ],
                       "variable": [
                         {
                           "key": "bookingId",
@@ -2606,8 +2900,13 @@
                     "header": [],
                     "url": {
                       "raw": "{{baseUrl}}/bookings/:bookingId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["bookings", ":bookingId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "bookings",
+                        ":bookingId"
+                      ],
                       "variable": [
                         {
                           "key": "bookingId",
@@ -2671,8 +2970,13 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/bookings/:bookingId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["bookings", ":bookingId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "bookings",
+                    ":bookingId"
+                  ],
                   "variable": [
                     {
                       "key": "bookingId",
@@ -2706,8 +3010,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/bookings/:bookingId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["bookings", ":bookingId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "bookings",
+                        ":bookingId"
+                      ],
                       "variable": [
                         {
                           "key": "bookingId",
@@ -2752,8 +3061,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/bookings/:bookingId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["bookings", ":bookingId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "bookings",
+                        ":bookingId"
+                      ],
                       "variable": [
                         {
                           "key": "bookingId",
@@ -2798,8 +3112,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/bookings/:bookingId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["bookings", ":bookingId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "bookings",
+                        ":bookingId"
+                      ],
                       "variable": [
                         {
                           "key": "bookingId",
@@ -2854,8 +3173,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/bookings/:bookingId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["bookings", ":bookingId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "bookings",
+                    ":bookingId"
+                  ],
                   "variable": [
                     {
                       "key": "bookingId",
@@ -2880,8 +3204,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/bookings/:bookingId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["bookings", ":bookingId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "bookings",
+                        ":bookingId"
+                      ],
                       "variable": [
                         {
                           "key": "bookingId",
@@ -2917,8 +3246,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/bookings/:bookingId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["bookings", ":bookingId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "bookings",
+                        ":bookingId"
+                      ],
                       "variable": [
                         {
                           "key": "bookingId",
@@ -3000,12 +3334,21 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
               }
             ],
             "url": {
               "raw": "{{baseUrl}}/bookings",
-              "host": ["{{baseUrl}}"],
-              "path": ["bookings"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings"
+              ]
             }
           },
           "response": [
@@ -3022,8 +3365,12 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/bookings",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["bookings"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "bookings"
+                  ]
                 }
               },
               "status": "OK",
@@ -3080,8 +3427,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/bookings",
-              "host": ["{{baseUrl}}"],
-              "path": ["bookings"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings"
+              ]
             }
           },
           "response": [
@@ -3108,8 +3459,12 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/bookings",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["bookings"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "bookings"
+                  ]
                 }
               },
               "status": "Created",
@@ -3201,8 +3556,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/reviews/:reviewId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["reviews", ":reviewId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reviews",
+                    ":reviewId"
+                  ],
                   "variable": [
                     {
                       "key": "reviewId",
@@ -3226,8 +3586,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/reviews/:reviewId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["reviews", ":reviewId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "reviews",
+                        ":reviewId"
+                      ],
                       "variable": [
                         {
                           "key": "reviewId",
@@ -3257,8 +3622,13 @@
                     "header": [],
                     "url": {
                       "raw": "{{baseUrl}}/reviews/:reviewId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["reviews", ":reviewId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "reviews",
+                        ":reviewId"
+                      ],
                       "variable": [
                         {
                           "key": "reviewId",
@@ -3322,8 +3692,13 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/reviews/:reviewId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["reviews", ":reviewId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reviews",
+                    ":reviewId"
+                  ],
                   "variable": [
                     {
                       "key": "reviewId",
@@ -3357,8 +3732,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/reviews/:reviewId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["reviews", ":reviewId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "reviews",
+                        ":reviewId"
+                      ],
                       "variable": [
                         {
                           "key": "reviewId",
@@ -3403,8 +3783,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/reviews/:reviewId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["reviews", ":reviewId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "reviews",
+                        ":reviewId"
+                      ],
                       "variable": [
                         {
                           "key": "reviewId",
@@ -3449,8 +3834,13 @@
                     },
                     "url": {
                       "raw": "{{baseUrl}}/reviews/:reviewId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["reviews", ":reviewId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "reviews",
+                        ":reviewId"
+                      ],
                       "variable": [
                         {
                           "key": "reviewId",
@@ -3505,8 +3895,13 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/reviews/:reviewId",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["reviews", ":reviewId"],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reviews",
+                    ":reviewId"
+                  ],
                   "variable": [
                     {
                       "key": "reviewId",
@@ -3531,8 +3926,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/reviews/:reviewId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["reviews", ":reviewId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "reviews",
+                        ":reviewId"
+                      ],
                       "variable": [
                         {
                           "key": "reviewId",
@@ -3568,8 +3968,13 @@
                     ],
                     "url": {
                       "raw": "{{baseUrl}}/reviews/:reviewId",
-                      "host": ["{{baseUrl}}"],
-                      "path": ["reviews", ":reviewId"],
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "reviews",
+                        ":reviewId"
+                      ],
                       "variable": [
                         {
                           "key": "reviewId",
@@ -3664,12 +4069,21 @@
               {
                 "key": "Accept",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
               }
             ],
             "url": {
               "raw": "{{baseUrl}}/reviews",
-              "host": ["{{baseUrl}}"],
-              "path": ["reviews"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reviews"
+              ]
             }
           },
           "response": [
@@ -3686,8 +4100,12 @@
                 ],
                 "url": {
                   "raw": "{{baseUrl}}/reviews",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["reviews"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reviews"
+                  ]
                 }
               },
               "status": "OK",
@@ -3744,8 +4162,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/reviews",
-              "host": ["{{baseUrl}}"],
-              "path": ["reviews"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reviews"
+              ]
             }
           },
           "response": [
@@ -3772,8 +4194,12 @@
                 },
                 "url": {
                   "raw": "{{baseUrl}}/reviews",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["reviews"]
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reviews"
+                  ]
                 }
               },
               "status": "Created",
@@ -3842,6 +4268,11 @@
           {
             "key": "Accept",
             "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
           }
         ],
         "body": {
@@ -3855,8 +4286,12 @@
         },
         "url": {
           "raw": "{{baseUrl}}/login",
-          "host": ["{{baseUrl}}"],
-          "path": ["login"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "login"
+          ]
         }
       },
       "response": [
@@ -3882,8 +4317,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
             }
           },
           "status": "OK",
@@ -3915,8 +4354,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
             }
           },
           "status": "Unauthorized",
@@ -3972,7 +4415,9 @@
       "script": {
         "id": "89457d56-a1ec-4a7a-a442-318fcc470c1a",
         "type": "text/javascript",
-        "exec": [""]
+        "exec": [
+          ""
+        ]
       }
     }
   ],

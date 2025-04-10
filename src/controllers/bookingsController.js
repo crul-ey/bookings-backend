@@ -1,13 +1,27 @@
 import { PrismaClient } from "@prisma/client";
+import crypto from "crypto";
+
 const prisma = new PrismaClient();
 
 // 📅 Maak een nieuwe boeking aan
 export const createBooking = async (req, res, next) => {
   try {
-    const { userId, propertyId, checkinDate, checkoutDate, numberOfGuests, totalPrice, bookingStatus } = req.body;
+    const {
+      userId,
+      propertyId,
+      checkinDate,
+      checkoutDate,
+      numberOfGuests,
+      totalPrice,
+      bookingStatus,
+    } = req.body;
+
+    console.log("createBooking body:", req.body);
 
     if (!userId || !propertyId || !checkinDate || !checkoutDate) {
-      return res.status(400).json({ error: "userId, propertyId, checkinDate en checkoutDate zijn verplicht." });
+      return res.status(400).json({
+        error: "userId, propertyId, checkinDate en checkoutDate zijn verplicht.",
+      });
     }
 
     const newBooking = await prisma.booking.create({
@@ -30,7 +44,7 @@ export const createBooking = async (req, res, next) => {
   }
 };
 
-// 📚 Haal alle boekingen op (optioneel filteren op userId)
+// 📚 Haal alle boekingen op (optioneel filter op userId)
 export const getAllBookings = async (req, res, next) => {
   try {
     const { userId } = req.query;
@@ -50,7 +64,7 @@ export const getAllBookings = async (req, res, next) => {
   }
 };
 
-// ❌ Annuleer een boeking
+// ❌ Annuleer een boeking (alleen als je op tijd bent)
 export const cancelBooking = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -65,15 +79,19 @@ export const cancelBooking = async (req, res, next) => {
 
     const now = new Date();
     const checkin = new Date(booking.checkinDate);
-    const cutoff = new Date(checkin.getTime() - 24 * 60 * 60 * 1000);
+    const cutoff = new Date(checkin.getTime() - 24 * 60 * 60 * 1000); // 24 uur van tevoren
 
     if (now > cutoff) {
-      return res.status(400).json({ error: "Je kunt alleen annuleren tot 24 uur van tevoren." });
+      return res
+        .status(400)
+        .json({ error: "Je kunt alleen annuleren tot 24 uur van tevoren." });
     }
 
     await prisma.booking.delete({ where: { id } });
 
-    res.status(200).json({ message: `Boeking met ID ${id} is geannuleerd.` });
+    res
+      .status(200)
+      .json({ message: `Boeking met ID ${id} is succesvol geannuleerd.` });
   } catch (error) {
     console.error("❌ cancelBooking error:", error);
     next(error);

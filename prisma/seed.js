@@ -20,6 +20,19 @@ const seed = async () => {
     await prisma.host.deleteMany();
     await prisma.user.deleteMany();
 
+    // ✅ Extra vaste user voor testen
+    await prisma.user.create({
+      data: {
+        id: "11111111-1111-1111-1111-111111111111",
+        username: "jdoe",
+        password: await bcrypt.hash("password123", SALT_ROUNDS),
+        name: "John Doe",
+        email: "johndoe@example.com",
+        phoneNumber: "0612345678",
+        profilePicture: "https://via.placeholder.com/150",
+      },
+    });
+
     // Users
     const usersData = loadData("users.json").users;
     for (const user of usersData) {

@@ -13,27 +13,27 @@ import { validateUUID } from "../middleware/validateUUID.js";
 
 const router = express.Router();
 
-// ✅ Beveiligde profielroute (moet BOVEN /:id staan!)
+// ✅ Beveiligde profielroute (LET OP: moet BOVEN "/:id" staan!)
 router.get("/profile", authenticateToken, (req, res) => {
   res.json({ message: "Welcome to your profile!", user: req.user });
 });
 
-// Alle gebruikers ophalen
+// 🔓 Alle gebruikers ophalen
 router.get("/", getUsers);
 
-// ✅ Specifieke gebruiker ophalen op basis van ID (na /profile!)
+// 🔒 Specifieke gebruiker ophalen op basis van UUID
 router.get("/:id", validateUUID, getUserById);
 
-// Nieuwe gebruiker aanmaken
+// 🔓 Nieuwe gebruiker aanmaken (signup)
 router.post("/", createUser);
 
-// Gebruiker updaten
+// 🔒 Gebruiker bijwerken
 router.put("/:id", authenticateToken, validateUUID, updateUser);
 
-// Gebruiker verwijderen
+// 🔒 Gebruiker verwijderen
 router.delete("/:id", authenticateToken, validateUUID, deleteUser);
 
-// Inloggen
+// 🔓 Inloggen
 router.post("/login", loginUser);
 
 export default router;

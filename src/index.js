@@ -1,27 +1,54 @@
 import express from "express";
-import usersRouter from "./routes/users.js"; // 👈 importeer je users route
-import propertiesRouter from "./routes/properties.js"; // 👈 importeer je properties route
-import bookingsRouter from "./routes/bookings.js"; // 👈 importeer je bookings route
-import amenitiesRouter from "./routes/amenities.js"; // 👈 importeer je amenities route
-import hostsRouter from "./routes/hosts.js"; // 👈 importeer je hosts route
-import reviewsRouter from "./routes/reviews.js"; // 👈 importeer je reviews route
+import dotenv from "dotenv";
+
+// ✅ Laad .env variabelen
+dotenv.config();
+
+// ✅ Routers
+import usersRouter from "./routes/users.js";
+import propertiesRouter from "./routes/properties.js";
+import bookingsRouter from "./routes/bookings.js";
+import amenitiesRouter from "./routes/amenities.js";
+import hostsRouter from "./routes/hosts.js";
+import reviewsRouter from "./routes/reviews.js";
 
 const app = express();
 
-app.use(express.json()); // 👈 zodat je JSON-body’s kunt lezen
+// ✅ Middleware: lees JSON body’s
+app.use(express.json());
 
+// ✅ Root endpoint
 app.get("/", (req, res) => {
   res.send("Hello world!");
 });
 
-// Voeg routes toe voor alle entiteiten
-app.use("/users", usersRouter); // 👈 alle /users endpoints gaan via deze router
-app.use("/properties", propertiesRouter); // 👈 alle /properties endpoints gaan via deze routers
-app.use("/bookings", bookingsRouter); // 👈 alle /bookings endpoints gaan via deze router
-app.use("/amenities", amenitiesRouter); // 👈 alle /amenities endpoints gaan via deze router
-app.use("/hosts", hostsRouter); // 👈 alle /hosts endpoints gaan via deze router
-app.use("/reviews", reviewsRouter); // 👈 alle /reviews endpoints gaan via deze router
+// ✅ Alias fix voor Postman login test (optioneel)
+app.post("/login", (req, res, next) => {
+  req.url = "/users/login";
+  next();
+});
 
-app.listen(3000, () => {
-  console.log("Server is listening on port 3000");
+// ✅ API routes
+app.use("/users", usersRouter);
+app.use("/properties", propertiesRouter);
+app.use("/bookings", bookingsRouter);
+app.use("/amenities", amenitiesRouter);
+app.use("/hosts", hostsRouter);
+app.use("/reviews", reviewsRouter);
+
+// ✅ 404 fallback voor niet-bestaande routes
+app.use((req, res) => {
+  res.status(404).json({ error: "Route niet gevonden" });
+});
+
+// ✅ Foutafhandeling middleware
+app.use((err, req, res, next) => {
+  console.error("❌ Interne fout:", err);
+  res.status(500).json({ error: "Er is iets misgegaan op de server." });
+});
+
+// ✅ Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server is listening on port ${PORT}`);
 });

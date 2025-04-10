@@ -1,21 +1,30 @@
 import express from "express";
-import { getAllHosts, getHostById, createHost, updateHost, deleteHost } from "../controllers/hostsController.js";
+import {
+  getAllHosts,
+  getHostById,
+  createHost,
+  updateHost,
+  deleteHost
+} from "../controllers/hostsController.js";
+
+import { authenticateToken } from "../middleware/auth.js";
+import { validateUUID } from "../middleware/validateUUID.js";
 
 const router = express.Router();
 
-// Haal alle hosts op
+// 🔍 Alle hosts ophalen (open endpoint)
 router.get("/", getAllHosts);
 
-// Haal een specifieke host op via UUID
-router.get("/:id", getHostById);
+// 🔍 Eén specifieke host ophalen (alleen geldige UUID)
+router.get("/:id", validateUUID, getHostById);
 
-// Voeg een nieuwe host toe
-router.post("/", createHost);
+// ➕ Nieuwe host aanmaken (alleen ingelogde gebruikers)
+router.post("/", authenticateToken, createHost);
 
-// Werk een bestaande host bij
-router.put("/:id", updateHost);
+// ✏️ Host bijwerken (alleen ingelogd + geldige UUID)
+router.put("/:id", authenticateToken, validateUUID, updateHost);
 
-// Verwijder een host via UUID
-router.delete("/:id", deleteHost);
+// ❌ Host verwijderen (alleen ingelogd + geldige UUID)
+router.delete("/:id", authenticateToken, validateUUID, deleteHost);
 
 export default router;

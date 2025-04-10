@@ -8,30 +8,31 @@ import {
   addAmenitiesToProperty,
   removeAmenitiesFromProperty
 } from "../controllers/propertiesController.js";
+
 import { authenticateToken } from "../middleware/auth.js"; 
 import { validateUUID } from "../middleware/validateUUID.js"; 
 
 const router = express.Router();
 
-// Haal alle properties op
+// 🔍 Alle properties ophalen (open endpoint)
 router.get("/", getAllProperties);
 
-// Haal een specifieke property op, met UUID-validatie
+// 🔍 Eén specifieke property ophalen (UUID vereist)
 router.get("/:id", validateUUID, getPropertyById);
 
-// Voeg een nieuwe property toe
+// ➕ Nieuwe property toevoegen (alleen ingelogde gebruikers)
 router.post("/", authenticateToken, createProperty);
 
-// Werk een bestaande property bij, met UUID-validatie
-router.put("/:id", validateUUID, updateProperty);
+// ✏️ Property bijwerken (alleen ingelogd + geldige UUID)
+router.put("/:id", authenticateToken, validateUUID, updateProperty);
 
-// Verwijder een property, met UUID-validatie
-router.delete("/:id", validateUUID, deleteProperty);
+// ❌ Property verwijderen (alleen ingelogd + geldige UUID)
+router.delete("/:id", authenticateToken, validateUUID, deleteProperty);
 
-// Voeg voorzieningen toe aan een property
+// 🧩 Voeg voorzieningen toe aan een property (alleen ingelogd)
 router.post("/:propertyId/amenities", authenticateToken, addAmenitiesToProperty);
 
-// verwijder voorzieningen van een property
+// 🧹 Verwijder voorzieningen van een property (alleen ingelogd)
 router.delete("/:propertyId/amenities", authenticateToken, removeAmenitiesFromProperty);
 
 export default router;

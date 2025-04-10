@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
-// Haal alle gebruikers op
+// ✅ Haal alle gebruikers op
 export const getUsers = async (req, res, next) => {
   try {
     const users = await prisma.user.findMany();
@@ -14,13 +14,13 @@ export const getUsers = async (req, res, next) => {
   }
 };
 
-// ✅ Haal één specifieke gebruiker op basis van ID
+// ✅ Haal één gebruiker op basis van UUID
 export const getUserById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(id) },
+      where: { id },
     });
 
     if (!user) return res.status(404).json({ error: "User not found" });
@@ -31,13 +31,23 @@ export const getUserById = async (req, res, next) => {
   }
 };
 
-// Maak een nieuwe gebruiker aan
+// ✅ Maak een nieuwe gebruiker aan
 export const createUser = async (req, res, next) => {
   try {
     const { username, password, email, name, phonenumber, pictureURL } = req.body;
 
+    console.log("Received body in createUser:", req.body);
+
     if (!username || !password || !email) {
-      return res.status(400).json({ error: "Username, password, and email are required" });
+      return res
+        .status(400)
+        .json({ error: "Username, password, and email are required" });
+    }
+
+    // Check op bestaande email
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      return res.status(409).json({ error: "Email already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -55,21 +65,23 @@ export const createUser = async (req, res, next) => {
 
     res.status(201).json(newUser);
   } catch (error) {
-    console.error(error);
+    console.error("createUser error:", error);
     next(error);
   }
 };
 
-// Update een gebruiker
+// ✅ Update een gebruiker
 export const updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { username, password, name, email, phonenumber, pictureURL } = req.body;
 
-    const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
+    const hashedPassword = password
+      ? await bcrypt.hash(password, 10)
+      : undefined;
 
     const updatedUser = await prisma.user.update({
-      where: { id: parseInt(id) },
+      where: { id },
       data: {
         username: username || undefined,
         password: hashedPassword || undefined,
@@ -86,11 +98,11 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
-// Verwijder een gebruiker
+// ✅ Verwijder een gebruiker
 export const deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    await prisma.user.delete({ where: { id: parseInt(id) } });
+    await prisma.user.delete({ where: { id } });
 
     res.status(204).send();
   } catch (error) {
@@ -98,20 +110,25 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
-// Login een gebruiker
+// ✅ Login gebruiker en geef JWT terug
 export const loginUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
+    console.log("Login body:", req.body);
+
     if (!username || !password) {
-      return res.status(400).json({ error: "Username and password are required" });
+      return res
+        .status(400)
+        .json({ error: "Username and password are required" });
     }
 
     const user = await prisma.user.findUnique({ where: { username } });
     if (!user) return res.status(404).json({ error: "User not found" });
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) return res.status(401).json({ error: "Invalid password" });
+    if (!isPasswordValid)
+      return res.status(401).json({ error: "Invalid password" });
 
     const token = jwt.sign(
       { id: user.id, username: user.username },
