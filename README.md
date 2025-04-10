@@ -1,62 +1,92 @@
-# BED Final Project Starter
+# BED Final Project – Bookings API
 
-This repository contains starter code for the Bookings project.
+This project is a full-featured backend for managing property bookings, reviews, and amenities using Prisma, Express.js, and SQLite.
 
-## How to get started
+## 🚀 How to Get Started
 
-You can clone the repo, install and run the app with the following commands:
-
-```plaintext
+```bash
 npm install
+npx prisma migrate dev --name init
 npm run dev
 ```
 
-## Starting the App
+## ⚙️ Environment Setup
 
-To start the app, follow these steps:
+Create a `.env` file in the root of the project:
 
-1. Create a `.env` file in the root directory.
-2. Replace the values for `AUTH_SECRET_KEY` and `SENTRY_DSN` with your own values.
-
-```plaintext
-AUTH_SECRET_KEY=your_secret_key_here
-SENTRY_DSN=your_sentry_dsn_here
+```env
+DATABASE_URL="file:./dev.db"
+JWT_SECRET=your_secret_key
 ```
 
-## Running tests
+---
 
-Tests are created using Newman, a command-line tool that is able to automate execution of Postman-created tests. Therefore, this command will simulate more or less the same tests that we executed during the course (e.g. test if the "happy case" returns 200 or 201 status code, or it returns 404 Not found when we are requesting a non-existing ID).
+## 📦 Seeding the Database
 
-To run the tests, perform the following steps:
+We use custom seed data based on real UUID-based data. To run the seed script:
 
-1. Start the server. This can usually be done by running `npm run dev` in the folder you want to test.
-2. Go to `postman/environments` folder in the repo. It has a content like this:
-
-```json
-{
-  "id": "f1936dc5-a5da-47d7-8189-045437f96e9e",
-  "name": "Local",
-  "values": [
-    {
-      "key": "baseUrl",
-      "value": "http://0.0.0.0:3000",
-      "type": "default",
-      "enabled": true
-    }
-  ],
-  "_postman_variable_scope": "environment",
-  "_postman_exported_at": "2023-08-11T05:55:13.469Z",
-  "_postman_exported_using": "Postman/10.16.9"
-}
+```bash
+npx prisma db seed
 ```
 
-3. If your server is running on a different port or URL, change the value `http://0.0.0.0:3000` to your server's data (this is the default one though).
-4. Run the following command
+This will populate the database with:
 
-```plaintext
+- Users & Hosts
+- Properties
+- Amenities
+- Reviews
+- Bookings
+
+---
+
+## 📮 API Testing via Postman
+
+Use the included Postman collection to test the entire flow.
+
+### ✅ Steps
+
+1. Open Postman
+2. Click `Import` > Upload `final-project-postman-collection.json`
+3. Log in with `/users/login` and copy the JWT token
+4. Paste it into Postman's environment under `{{token}}`
+5. Also set `{{userId}}` and `{{propertyId}}` manually for POSTs
+
+---
+
+## 🧪 Running Tests via Newman (optional)
+
+You can run the Postman tests in the terminal with:
+
+```bash
 npm test
 ```
 
-After this, you will see the test results prompted to the terminal. If you have a look at the `package.json` file, you will see that it executes the collection stored in the `postman` folder of the repo root.
+Make sure:
+- The server is running on the expected port (`http://localhost:3000`)
+- You restart your server before running tests that delete data
 
-Important: When dealing with JSON data, please, make sure that you restart the server with `npm run dev` every time you execute tests! This is important because some tests will remove data via DELETE endpoints and that operation cannot be repeated with the same ID again and again.
+---
+
+## 📁 Tech Stack
+
+- Node.js / Express
+- Prisma ORM + SQLite
+- JWT Authentication
+- Postman & Newman for API testing
+
+---
+
+## 🧠 Notes
+
+- All models use `UUID` as their primary key
+- Middleware `validateUUID` checks `:id` parameters
+- All protected routes require `Authorization: Bearer <token>`
+
+---
+
+## ✅ Done
+
+- ✅ All models & schema with relations
+- ✅ Seeding with real UUIDs
+- ✅ Controllers & routes tested via Postman
+- ✅ Project ready for submission

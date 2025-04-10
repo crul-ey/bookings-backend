@@ -1,2 +1,12 @@
 node_modules
 .vscode
+.env
+dist
+coverage
+*.log
+*.lock
+*.tsbuildinfo
+*.tgz
+*.zip
+*.tar.gz
+*.tgz
