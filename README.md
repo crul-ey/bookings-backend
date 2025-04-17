@@ -1,62 +1,112 @@
-# BED Final Project Starter
+ckend API
 
-This repository contains starter code for the Bookings project.
+Een volledige backend API gebouwd met **Node.js**, **Express**, **Prisma** en **SQLite**.  
+Deze API beheert **gebruikers**, **hosts**, **properties**, **boekingen**, **reviews** en **voorzieningen (amenities)**. JWT-authenticatie, filtering en error-monitoring via Sentry zijn inbegrepen.
 
-## How to get started
+---
 
-You can clone the repo, install and run the app with the following commands:
+## 📦 Functionaliteiten
 
-```plaintext
+- 🔐 **Authenticatie** via JWT
+- 📄 **CRUD** voor alle resources
+- 🧠 **Filtering** op:
+  - `/properties?location=Malibu&pricePerNight=310.25&amenities=Wifi`
+  - `/bookings?userId=...`
+  - `/users?username=...` of `?email=...`
+  - `/hosts?name=...`
+- 🛠️ **Prisma ORM** voor databasebeheer
+- 📊 **Sentry-integratie** voor error monitoring
+- ✅ **Volledig getest** met Postman-collecties
+
+---
+
+## 📁 Endpoints
+
+| Method | Endpoint               | Beschrijving                            |
+|--------|------------------------|------------------------------------------|
+| POST   | `/login`              | Inloggen en JWT ontvangen                |
+| GET    | `/users`              | Alle gebruikers ophalen (zonder wachtwoord) |
+| POST   | `/users`              | Nieuwe gebruiker aanmaken                |
+| GET    | `/users/:id`          | Specifieke gebruiker ophalen             |
+| PUT    | `/users/:id`          | Gebruiker bijwerken                      |
+| DELETE | `/users/:id`          | Gebruiker verwijderen                    |
+| GET    | `/hosts`              | Alle hosts ophalen                       |
+| POST   | `/hosts`              | Nieuwe host aanmaken                     |
+| GET    | `/hosts/:id`          | Specifieke host ophalen                  |
+| PUT    | `/hosts/:id`          | Host bijwerken                           |
+| DELETE | `/hosts/:id`          | Host verwijderen                         |
+| GET    | `/properties`         | Alle properties ophalen (+ filters)      |
+| POST   | `/properties`         | Nieuwe property aanmaken                 |
+| GET    | `/properties/:id`     | Specifieke property ophalen              |
+| PUT    | `/properties/:id`     | Property bijwerken                       |
+| DELETE | `/properties/:id`     | Property verwijderen                     |
+| GET    | `/bookings`           | Alle boekingen ophalen (+ filters)       |
+| POST   | `/bookings`           | Nieuwe booking aanmaken                  |
+| GET    | `/bookings/:id`       | Specifieke booking ophalen               |
+| PUT    | `/bookings/:id`       | Booking bijwerken                        |
+| DELETE | `/bookings/:id`       | Booking verwijderen                      |
+| GET    | `/reviews`            | Alle reviews ophalen                     |
+| POST   | `/reviews`            | Nieuwe review aanmaken                   |
+| GET    | `/reviews/:id`        | Review ophalen                           |
+| PUT    | `/reviews/:id`        | Review bijwerken                         |
+| DELETE | `/reviews/:id`        | Review verwijderen                       |
+| GET    | `/amenities`          | Alle voorzieningen ophalen               |
+| POST   | `/amenities`          | Nieuwe voorziening aanmaken              |
+| GET    | `/amenities/:id`      | Voorziening ophalen                      |
+| PUT    | `/amenities/:id`      | Voorziening bijwerken                    |
+| DELETE | `/amenities/:id`      | Voorziening verwijderen                  |
+
+---
+
+## 🛠️ Installatie
+
+```bash
+git clone https://github.com/jouwgebruikersnaam/bookings-backend.git
+cd bookings-backend
 npm install
+npx prisma migrate dev --name init
 npm run dev
-```
 
-## Starting the App
+🔐 .env voorbeeld
 
-To start the app, follow these steps:
+PORT=3000
+DATABASE_URL="file:./dev.db"
+AUTH_SECRET_KEY=een_geheim_woord
+SENTRY_DSN=https://example@sentry.io/123456
 
-1. Create a `.env` file in the root directory.
-2. Replace the values for `AUTH_SECRET_KEY` and `SENTRY_DSN` with your own values.
+🧪 Testen met Postman
 
-```plaintext
-AUTH_SECRET_KEY=your_secret_key_here
-SENTRY_DSN=your_sentry_dsn_here
-```
+Postman-collecties zijn inbegrepen in de /postman map.
+Open ze met Postman om alle endpoints te testen, inclusief positieve en negatieve gevallen.
+📦 Tech Stack
 
-## Running tests
+    Node.js
 
-Tests are created using Newman, a command-line tool that is able to automate execution of Postman-created tests. Therefore, this command will simulate more or less the same tests that we executed during the course (e.g. test if the "happy case" returns 200 or 201 status code, or it returns 404 Not found when we are requesting a non-existing ID).
+    Express
 
-To run the tests, perform the following steps:
+    Prisma ORM
 
-1. Start the server. This can usually be done by running `npm run dev` in the folder you want to test.
-2. Go to `postman/environments` folder in the repo. It has a content like this:
+    SQLite
 
-```json
-{
-  "id": "f1936dc5-a5da-47d7-8189-045437f96e9e",
-  "name": "Local",
-  "values": [
-    {
-      "key": "baseUrl",
-      "value": "http://0.0.0.0:3000",
-      "type": "default",
-      "enabled": true
-    }
-  ],
-  "_postman_variable_scope": "environment",
-  "_postman_exported_at": "2023-08-11T05:55:13.469Z",
-  "_postman_exported_using": "Postman/10.16.9"
-}
-```
+    JSON Web Token (JWT)
 
-3. If your server is running on a different port or URL, change the value `http://0.0.0.0:3000` to your server's data (this is the default one though).
-4. Run the following command
+    Sentry
 
-```plaintext
-npm test
-```
+    Postman
 
-After this, you will see the test results prompted to the terminal. If you have a look at the `package.json` file, you will see that it executes the collection stored in the `postman` folder of the repo root.
+🚀 Mogelijke uitbreidingen
 
-Important: When dealing with JSON data, please, make sure that you restart the server with `npm run dev` every time you execute tests! This is important because some tests will remove data via DELETE endpoints and that operation cannot be repeated with the same ID again and again.
+    Verbinden met een frontend (React)
+
+    Deployen via Vercel/Render
+
+    Echte PostgreSQL-database
+
+    Frontend login-functionaliteit
+
+👨‍💻 Gemaakt door
+
+    Deze app is gebouwd als onderdeel van de Winc Academy backend module.
+    Door E.Yalcin / GITHUB: crul-ey
+
+-
