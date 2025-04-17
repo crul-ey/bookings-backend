@@ -1,4 +1,4 @@
-ckend API
+Backend API
 
 Een volledige backend API gebouwd met **Node.js**, **Express**, **Prisma** en **SQLite**.  
 Deze API beheert **gebruikers**, **hosts**, **properties**, **boekingen**, **reviews** en **voorzieningen (amenities)**. JWT-authenticatie, filtering en error-monitoring via Sentry zijn inbegrepen.
