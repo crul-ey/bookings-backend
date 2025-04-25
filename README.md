@@ -1,60 +1,49 @@
-Backend API
+# 📦 Bookings Backend API
 
-Een volledige backend API gebouwd met **Node.js**, **Express**, **Prisma** en **SQLite**.  
-Deze API beheert **gebruikers**, **hosts**, **properties**, **boekingen**, **reviews** en **voorzieningen (amenities)**. JWT-authenticatie, filtering en error-monitoring via Sentry zijn inbegrepen.
-
----
-
-## 📦 Functionaliteiten
-
-- 🔐 **Authenticatie** via JWT
-- 📄 **CRUD** voor alle resources
-- 🧠 **Filtering** op:
-  - `/properties?location=Malibu&pricePerNight=310.25&amenities=Wifi`
-  - `/bookings?userId=...`
-  - `/users?username=...` of `?email=...`
-  - `/hosts?name=...`
-- 🛠️ **Prisma ORM** voor databasebeheer
-- 📊 **Sentry-integratie** voor error monitoring
-- ✅ **Volledig getest** met Postman-collecties
+Een krachtige backend API gebouwd met **Node.js**, **Express**, **Prisma** en **SQLite**. Deze app beheert **gebruikers**, **hosts**, **properties**, **boekingen**, **reviews** en **voorzieningen (amenities)**. JWT-authenticatie, filtering en error-monitoring via Sentry zijn inbegrepen.
 
 ---
 
-## 📁 Endpoints
+## ✅ Wat is nieuw?
+- 🔄 **Volledig getest**: alle endpoints 100% getest met Postman (inclusief setup van automatische tokens)
+- 🧪 **Test Runner** geconfigureerd in Postman (positieve + negatieve flows)
+- 🧠 **Scripted Property ID's**: dynamische chaining van ID's in je Postman tests
+- 🔐 **Login + token-gebruik automatisch** via Pre-request script
 
-| Method | Endpoint               | Beschrijving                            |
-|--------|------------------------|------------------------------------------|
-| POST   | `/login`              | Inloggen en JWT ontvangen                |
-| GET    | `/users`              | Alle gebruikers ophalen (zonder wachtwoord) |
-| POST   | `/users`              | Nieuwe gebruiker aanmaken                |
-| GET    | `/users/:id`          | Specifieke gebruiker ophalen             |
-| PUT    | `/users/:id`          | Gebruiker bijwerken                      |
-| DELETE | `/users/:id`          | Gebruiker verwijderen                    |
-| GET    | `/hosts`              | Alle hosts ophalen                       |
-| POST   | `/hosts`              | Nieuwe host aanmaken                     |
-| GET    | `/hosts/:id`          | Specifieke host ophalen                  |
-| PUT    | `/hosts/:id`          | Host bijwerken                           |
-| DELETE | `/hosts/:id`          | Host verwijderen                         |
-| GET    | `/properties`         | Alle properties ophalen (+ filters)      |
-| POST   | `/properties`         | Nieuwe property aanmaken                 |
-| GET    | `/properties/:id`     | Specifieke property ophalen              |
-| PUT    | `/properties/:id`     | Property bijwerken                       |
-| DELETE | `/properties/:id`     | Property verwijderen                     |
-| GET    | `/bookings`           | Alle boekingen ophalen (+ filters)       |
-| POST   | `/bookings`           | Nieuwe booking aanmaken                  |
-| GET    | `/bookings/:id`       | Specifieke booking ophalen               |
-| PUT    | `/bookings/:id`       | Booking bijwerken                        |
-| DELETE | `/bookings/:id`       | Booking verwijderen                      |
-| GET    | `/reviews`            | Alle reviews ophalen                     |
-| POST   | `/reviews`            | Nieuwe review aanmaken                   |
-| GET    | `/reviews/:id`        | Review ophalen                           |
-| PUT    | `/reviews/:id`        | Review bijwerken                         |
-| DELETE | `/reviews/:id`        | Review verwijderen                       |
-| GET    | `/amenities`          | Alle voorzieningen ophalen               |
-| POST   | `/amenities`          | Nieuwe voorziening aanmaken              |
-| GET    | `/amenities/:id`      | Voorziening ophalen                      |
-| PUT    | `/amenities/:id`      | Voorziening bijwerken                    |
-| DELETE | `/amenities/:id`      | Voorziening verwijderen                  |
+---
+
+## 🔐 Authenticatie
+Gebruik `POST /auth/login` om een token op te halen. Deze token wordt automatisch gebruikt in Postman-requests via een **Bearer Token header** (zie environment setup).
+
+---
+
+## 🔁 API Functionaliteiten
+
+- ✅ JWT-authenticatie voor protected routes
+- ✅ Volledige CRUD voor alle resources
+- ✅ Filtering mogelijk op bijna elke GET-route
+- ✅ Prisma ORM + SQLite
+- ✅ Error-monitoring met Sentry
+- ✅ Postman-tests met environment chaining
+
+---
+
+## 📁 Belangrijke Endpoints
+
+Zie volledige tabel in je oude README hierboven — alle endpoints zijn identiek gebleven maar volledig getest.
+
+---
+
+## 🧪 Testen met Postman
+
+1. Open de `/postman/Bookings API.postman_collection.json`
+2. Selecteer environment `Local`
+3. Klik op **Run Collection** met de **Runner**
+4. ✅ Zie alle testresultaten — inclusief automatisch gegenereerde tokens en ID's
+
+### 📌 Opmerking
+- `POST /properties` slaat het ID van de aangemaakte property op in `{{propertyId}}`
+- Deze ID wordt daarna automatisch gebruikt in `GET`, `PUT`, `DELETE` requests
 
 ---
 
@@ -66,47 +55,31 @@ cd bookings-backend
 npm install
 npx prisma migrate dev --name init
 npm run dev
+```
 
-🔐 .env voorbeeld
-
+#### 🔐 .env voorbeeld
+```env
 PORT=3000
 DATABASE_URL="file:./dev.db"
 AUTH_SECRET_KEY=een_geheim_woord
 SENTRY_DSN=https://example@sentry.io/123456
+```
 
-🧪 Testen met Postman
+---
 
-Postman-collecties zijn inbegrepen in de /postman map.
-Open ze met Postman om alle endpoints te testen, inclusief positieve en negatieve gevallen.
-📦 Tech Stack
+## 🚀 Mogelijke uitbreidingen
 
-    Node.js
+- Verbinden met een frontend in React of Next.js
+- Deployen naar Vercel, Railway of Render
+- Overschakelen naar PostgreSQL voor productie
+- Extra beveiliging zoals rate limiting, input validation
 
-    Express
+---
 
-    Prisma ORM
+## 👨‍💻 Gemaakt door
+Deze app is gebouwd als onderdeel van de **Winc Academy backend module**.
+Door **E. Yalcin**  
+🔗 GitHub: [crul-ey](https://github.com/crul-ey)
 
-    SQLite
+---
 
-    JSON Web Token (JWT)
-
-    Sentry
-
-    Postman
-
-🚀 Mogelijke uitbreidingen
-
-    Verbinden met een frontend (React)
-
-    Deployen via Vercel/Render
-
-    Echte PostgreSQL-database
-
-    Frontend login-functionaliteit
-
-👨‍💻 Gemaakt door
-
-    Deze app is gebouwd als onderdeel van de Winc Academy backend module.
-    Door E.Yalcin / GITHUB: crul-ey
-
--
