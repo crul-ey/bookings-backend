@@ -1,41 +1,29 @@
-import prisma from '../../prisma/client.js';
+import { getAllBookings } from '../services/bookings/getAllBookings.js';
+import { getBookingById } from '../services/bookings/getBookingById.js';
+import { createBooking } from '../services/bookings/createBooking.js';
+import { updateBooking } from '../services/bookings/updateBooking.js';
+import { deleteBooking } from '../services/bookings/deleteBooking.js';
 
-// ✅ GET /bookings – met filtering op userId
-export const getAllBookings = async (req, res) => {
+// ✅ GET /bookings?userId=xxx
+export const getAllBookingsController = async (req, res) => {
   try {
     const { userId } = req.query;
 
     const filters = {};
+    if (userId) filters.userId = userId;
 
-    if (userId) {
-      filters.userId = userId;
-    }
-
-    const bookings = await prisma.booking.findMany({
-      where: filters,
-      include: {
-        user: { select: { id: true, name: true, email: true } },
-        property: { select: { id: true, title: true, location: true } },
-      },
-    });
-
+    const bookings = await getAllBookings(Object.keys(filters).length ? filters : undefined);
     res.status(200).json(bookings);
   } catch (error) {
-    console.error('❌ Error fetching bookings:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('❌ Error fetching bookings:', error.message);
+    res.status(500).json({ error: 'Server error while fetching bookings' });
   }
 };
 
 // ✅ GET /bookings/:id
-export const getBookingById = async (req, res) => {
+export const getBookingByIdController = async (req, res) => {
   try {
-    const booking = await prisma.booking.findUnique({
-      where: { id: req.params.id },
-      include: {
-        user: { select: { id: true, name: true, email: true } },
-        property: { select: { id: true, title: true, location: true } },
-      },
-    });
+    const booking = await getBookingById(req.params.id);
 
     if (!booking) {
       return res.status(404).json({ error: 'Booking not found' });
@@ -43,13 +31,13 @@ export const getBookingById = async (req, res) => {
 
     res.status(200).json(booking);
   } catch (error) {
-    console.error('❌ Error fetching booking:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('❌ Error fetching booking by ID:', error.message);
+    res.status(500).json({ error: 'Server error while fetching booking' });
   }
 };
 
 // ✅ POST /bookings
-export const createBooking = async (req, res) => {
+export const createBookingController = async (req, res) => {
   try {
     const {
       userId,
@@ -65,75 +53,60 @@ export const createBooking = async (req, res) => {
       return res.status(400).json({ error: 'Missing required booking data' });
     }
 
-    const newBooking = await prisma.booking.create({
-      data: {
-        userId,
-        propertyId,
-        checkinDate: new Date(checkinDate),
-        checkoutDate: new Date(checkoutDate),
-        numberOfGuests,
-        totalPrice,
-        bookingStatus: bookingStatus || 'confirmed',
-      },
+    const newBooking = await createBooking({
+      userId,
+      propertyId,
+      checkinDate,
+      checkoutDate,
+      numberOfGuests,
+      totalPrice,
+      bookingStatus,
     });
 
     res.status(201).json({ id: newBooking.id });
   } catch (error) {
-    console.error('❌ Error creating booking:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('❌ Error creating booking:', error.message);
+    res.status(500).json({ error: 'Server error while creating booking' });
   }
 };
 
 // ✅ PUT /bookings/:id
-export const updateBooking = async (req, res) => {
-  const { id } = req.params;
-  const {
-    checkinDate,
-    checkoutDate,
-    numberOfGuests,
-    totalPrice,
-    bookingStatus,
-  } = req.body;
-
+export const updateBookingController = async (req, res) => {
   try {
-    const updatedBooking = await prisma.booking.update({
-      where: { id },
-      data: {
-        checkinDate: checkinDate && new Date(checkinDate),
-        checkoutDate: checkoutDate && new Date(checkoutDate),
-        numberOfGuests,
-        totalPrice,
-        bookingStatus,
-      },
-    });
-
+    const updatedBooking = await updateBooking(req.params.id, req.body);
     res.status(200).json(updatedBooking);
   } catch (error) {
+    console.error('❌ Error updating booking:', error.message);
+
     if (error.code === 'P2025') {
       res.status(404).json({ error: 'Booking not found' });
     } else {
-      console.error('❌ Error updating booking:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Server error while updating booking' });
     }
   }
 };
 
 // ✅ DELETE /bookings/:id
-export const deleteBooking = async (req, res) => {
-  const { id } = req.params;
-
+export const deleteBookingController = async (req, res) => {
   try {
-    await prisma.booking.delete({
-      where: { id },
-    });
-
+    await deleteBooking(req.params.id);
     res.status(200).json({ message: 'Booking deleted successfully' });
   } catch (error) {
+    console.error('❌ Error deleting booking:', error.message);
+
     if (error.code === 'P2025') {
       res.status(404).json({ error: 'Booking not found' });
     } else {
-      console.error('❌ Error deleting booking:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Server error while deleting booking' });
     }
   }
 };
+
+
+export {
+  getAllBookingsController as getAllBookings,
+  getBookingByIdController as getBookingById,
+  createBookingController as createBooking,
+  updateBookingController as updateBooking,
+  deleteBookingController as deleteBooking,
+}

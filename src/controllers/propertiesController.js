@@ -1,34 +1,30 @@
-import prisma from '../../prisma/client.js';
+import { getAllProperties } from '../services/properties/getAllProperties.js';
+import { getPropertyById } from '../services/properties/getPropertyById.js';
+import { createProperty } from '../services/properties/createProperty.js';
+import { updateProperty } from '../services/properties/updateProperty.js';
+import { deleteProperty } from '../services/properties/deleteProperty.js';
 
 // ✅ GET /properties – met filtering op location, pricePerNight, amenities
-export const getAllProperties = async (req, res) => {
+export const getAllPropertiesController = async (req, res) => {
   try {
     const { location, pricePerNight, amenities } = req.query;
 
     const filters = {};
 
-    // Filter op locatie (string match)
     if (location) {
-      filters.location = { contains: location };
+      filters.location = {
+        contains: location,
+        mode: 'insensitive',
+      };
     }
 
-    // Filter op maximale prijs
     if (pricePerNight) {
-      filters.pricePerNight = { lte: parseFloat(pricePerNight) };
+      filters.pricePerNight = parseFloat(pricePerNight);
     }
 
-    // Haal alle properties op (met relaties)
-    const properties = await prisma.property.findMany({
-      where: filters,
-      include: {
-        host: { select: { id: true, name: true, email: true } },
-        amenities: { include: { amenity: true } },
-        bookings: true,
-        reviews: true,
-      },
-    });
+    const properties = await getAllProperties(Object.keys(filters).length > 0 ? filters : undefined);
 
-    // Filter op specifieke amenity (optioneel)
+    // Client-side filter voor amenities
     let filteredProperties = properties;
 
     if (amenities) {
@@ -42,23 +38,15 @@ export const getAllProperties = async (req, res) => {
 
     res.status(200).json(filteredProperties);
   } catch (error) {
-    console.error('❌ Error fetching properties:', error);
+    console.error('❌ Error fetching properties:', error.message);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 // ✅ GET /properties/:id – specifieke property ophalen
-export const getPropertyById = async (req, res) => {
+export const getPropertyByIdController = async (req, res) => {
   try {
-    const property = await prisma.property.findUnique({
-      where: { id: req.params.id },
-      include: {
-        host: { select: { id: true, name: true, email: true } },
-        amenities: { include: { amenity: true } },
-        bookings: true,
-        reviews: true,
-      },
-    });
+    const property = await getPropertyById(req.params.id);
 
     if (!property) {
       return res.status(404).json({ error: 'Property not found' });
@@ -66,13 +54,13 @@ export const getPropertyById = async (req, res) => {
 
     res.status(200).json(property);
   } catch (error) {
-    console.error('❌ Error fetching property by ID:', error);
+    console.error('❌ Error fetching property by ID:', error.message);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 // ✅ POST /properties – nieuwe property aanmaken
-export const createProperty = async (req, res) => {
+export const createPropertyController = async (req, res) => {
   try {
     const {
       title,
@@ -90,82 +78,64 @@ export const createProperty = async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const newProperty = await prisma.property.create({
-      data: {
-        title,
-        description,
-        location,
-        pricePerNight,
-        bedroomCount,
-        bathRoomCount,
-        maxGuestCount,
-        rating,
-        hostId,
-      },
+    const newProperty = await createProperty({
+      title,
+      description,
+      location,
+      pricePerNight,
+      bedroomCount,
+      bathRoomCount,
+      maxGuestCount,
+      rating,
+      hostId,
     });
 
     res.status(201).json({ id: newProperty.id });
   } catch (error) {
-    console.error('❌ Error creating property:', error);
+    console.error('❌ Error creating property:', error.message);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 // ✅ PUT /properties/:id – property bijwerken
-export const updateProperty = async (req, res) => {
-  const { id } = req.params;
-  const {
-    title,
-    description,
-    location,
-    pricePerNight,
-    bedroomCount,
-    bathRoomCount,
-    maxGuestCount,
-    rating,
-    hostId,
-  } = req.body;
-
+export const updatePropertyController = async (req, res) => {
   try {
-    const updated = await prisma.property.update({
-      where: { id },
-      data: {
-        title,
-        description,
-        location,
-        pricePerNight,
-        bedroomCount,
-        bathRoomCount,
-        maxGuestCount,
-        rating,
-        hostId,
-      },
-    });
+    const updatedProperty = await updateProperty(req.params.id, req.body);
 
-    res.status(200).json(updated);
+    res.status(200).json(updatedProperty);
   } catch (error) {
+    console.error('❌ Error updating property:', error.message);
+
     if (error.code === 'P2025') {
       res.status(404).json({ error: 'Property not found' });
     } else {
-      console.error('❌ Error updating property:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   }
 };
 
 // ✅ DELETE /properties/:id – property verwijderen
-export const deleteProperty = async (req, res) => {
-  const { id } = req.params;
-
+export const deletePropertyController = async (req, res) => {
   try {
-    await prisma.property.delete({ where: { id } });
+    await deleteProperty(req.params.id);
+
     res.status(200).json({ message: 'Property deleted successfully' });
   } catch (error) {
+    console.error('❌ Error deleting property:', error.message);
+
     if (error.code === 'P2025') {
       res.status(404).json({ error: 'Property not found' });
     } else {
-      console.error('❌ Error deleting property:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   }
 };
+
+
+export { 
+  getAllPropertiesController as getAllProperties,
+  getPropertyByIdController as getPropertyById,
+  createPropertyController as createProperty,
+  updatePropertyController as updateProperty,
+  deletePropertyController as deleteProperty,
+}

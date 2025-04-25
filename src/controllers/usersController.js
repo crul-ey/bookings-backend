@@ -1,10 +1,11 @@
-import prisma from '../../prisma/client.js';
-import bcrypt from 'bcrypt';
-
-const SALT_ROUNDS = 10;
+import { getAllUsers } from '../services/users/getAllUsers.js';
+import { getUserById } from '../services/users/getUserById.js';
+import { createUser } from '../services/users/createUser.js';
+import { updateUser } from '../services/users/updateUser.js';
+import { deleteUser } from '../services/users/deleteUser.js';
 
 // ✅ GET /users – met filtering op username en email
-export const getAllUsers = async (req, res) => {
+export const getAllUsersController = async (req, res) => {
   try {
     const { username, email } = req.query;
 
@@ -18,27 +19,17 @@ export const getAllUsers = async (req, res) => {
       filters.email = { contains: email, mode: 'insensitive' };
     }
 
-    const users = await prisma.user.findMany({
-      where: filters,
-      select: {
-        id: true,
-        username: true,
-        name: true,
-        email: true,
-        phoneNumber: true,
-        profilePicture: true,
-      },
-    });
+    const users = await getAllUsers(Object.keys(filters).length > 0 ? filters : undefined);
 
     res.status(200).json(users);
   } catch (error) {
-    console.error('❌ Error fetching users:', error);
+    console.error('❌ Error fetching users:', error.message);
     res.status(500).json({ error: 'Server error while fetching users' });
   }
 };
 
 // ✅ POST /users
-export const createUser = async (req, res) => {
+export const createUserController = async (req, res) => {
   try {
     const { username, password, name, email, phoneNumber, profilePicture } = req.body;
 
@@ -46,73 +37,38 @@ export const createUser = async (req, res) => {
       return res.status(400).json({ error: 'Username, password en email zijn verplicht' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-
-    const newUser = await prisma.user.create({
-      data: {
-        username,
-        password: hashedPassword,
-        name,
-        email,
-        phoneNumber,
-        profilePicture,
-      },
-    });
+    const newUser = await createUser({ username, password, name, email, phoneNumber, profilePicture });
 
     res.status(201).json({ id: newUser.id });
   } catch (error) {
-    console.error('❌ Error creating user:', error);
+    console.error('❌ Error creating user:', error.message);
     res.status(500).json({ error: 'Failed to create user' });
   }
 };
 
 // ✅ GET /users/:id
-export const getUserById = async (req, res) => {
+export const getUserByIdController = async (req, res) => {
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: req.params.id },
-      select: {
-        id: true,
-        username: true,
-        name: true,
-        email: true,
-        phoneNumber: true,
-        profilePicture: true,
-      },
-    });
+    const user = await getUserById(req.params.id);
 
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     res.status(200).json(user);
   } catch (error) {
+    console.error('❌ Error fetching user by ID:', error.message);
     res.status(500).json({ error: 'Failed to get user' });
   }
 };
 
 // ✅ PUT /users/:id
-export const updateUser = async (req, res) => {
+export const updateUserController = async (req, res) => {
   try {
-    const { username, password, name, email, phoneNumber, profilePicture } = req.body;
-
-    const data = {
-      username,
-      name,
-      email,
-      phoneNumber,
-      profilePicture,
-    };
-
-    if (password) {
-      data.password = await bcrypt.hash(password, SALT_ROUNDS);
-    }
-
-    const updatedUser = await prisma.user.update({
-      where: { id: req.params.id },
-      data,
-    });
+    const updatedUser = await updateUser(req.params.id, req.body);
 
     res.status(200).json(updatedUser);
   } catch (error) {
+    console.error('❌ Error updating user:', error.message);
+
     if (error.code === 'P2025') {
       res.status(404).json({ error: 'User not found' });
     } else {
@@ -122,11 +78,14 @@ export const updateUser = async (req, res) => {
 };
 
 // ✅ DELETE /users/:id
-export const deleteUser = async (req, res) => {
+export const deleteUserController = async (req, res) => {
   try {
-    await prisma.user.delete({ where: { id: req.params.id } });
+    await deleteUser(req.params.id);
+
     res.status(200).json({ message: 'User deleted' });
   } catch (error) {
+    console.error('❌ Error deleting user:', error.message);
+
     if (error.code === 'P2025') {
       res.status(404).json({ error: 'User not found' });
     } else {
@@ -134,3 +93,11 @@ export const deleteUser = async (req, res) => {
     }
   }
 };
+
+export {
+  getAllUsersController as getAllUsers,
+  createUserController as createUser,
+  getUserByIdController as getUserById,
+  updateUserController as updateUser,
+  deleteUserController as deleteUser,
+}

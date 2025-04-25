@@ -7,64 +7,63 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id            String   @id @default(uuid())
-  username      String   @unique
-  password      String
-  name          String
-  email         String
-  phoneNumber   String
-  profilePicture    String
+  id              String    @id @default(uuid())
+  username        String    @unique
+  password        String
+  name            String
+  email           String
+  phoneNumber     String
+  profilePicture  String
 
-  reviews       Review[]
-  bookings      Booking[]
+  reviews         Review[]
+  bookings        Booking[]
 }
 
 model Host {
-  id          String    @id @default(uuid())
-  username    String    @unique
-  password    String
-  name        String
-  email       String
-  phoneNumber String
+  id              String    @id @default(uuid())
+  username        String    @unique
+  password        String
+  name            String
+  email           String
+  phoneNumber     String
   profilePicture  String
-  aboutMe     String
+  aboutMe         String
 
-  listings    Property[]
+  listings        Property[]
 }
 
 model Property {
-  id             String    @id @default(uuid())
-  title          String
-  description    String
-  location       String
-  pricePerNight  Float
-  bedroomCount   Int
-  bathRoomCount  Int
-  maxGuestCount  Int
-  rating         Float
+  id              String    @id @default(uuid())
+  title           String
+  description     String
+  location        String
+  pricePerNight   Float
+  bedroomCount    Int
+  bathRoomCount   Int
+  maxGuestCount   Int
+  rating          Float
 
-  hostId         String
-  host           Host      @relation(fields: [hostId], references: [id])
+  hostId          String
+  host            Host      @relation(fields: [hostId], references: [id], onDelete: Cascade)
 
-  amenities      PropertyAmenity[]
-  bookings       Booking[]
-  reviews        Review[]
+  amenities       PropertyAmenity[]
+  bookings        Booking[]
+  reviews         Review[]
 }
 
 model Amenity {
-  id         String              @id @default(uuid())
-  name       String
-  properties PropertyAmenity[]
+  id              String              @id @default(uuid())
+  name            String
+  properties      PropertyAmenity[]
 }
 
 model PropertyAmenity {
-  propertyId String
-  amenityId  String
+  propertyId      String
+  amenityId       String
 
-  property   Property @relation(fields: [propertyId], references: [id])
-  amenity    Amenity  @relation(fields: [amenityId], references: [id])
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  amenity         Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade)
 
   @@id([propertyId, amenityId])
 }
@@ -79,22 +78,17 @@ model Booking {
   totalPrice      Float
   bookingStatus   String
 
-  user      User     @relation(fields: [userId], references: [id])
-  property  Property @relation(fields: [propertyId], references: [id])
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
 
 model Review {
-  id         String   @id @default(uuid())
-  userId     String
-  propertyId String
-  rating     Int
-  comment    String
+  id              String   @id @default(uuid())
+  userId          String
+  propertyId      String
+  rating          Int
+  comment         String
 
-  user      User     @relation(fields: [userId], references: [id])
-  property  Property @relation(fields: [propertyId], references: [id])
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
-
-
-
-
-
