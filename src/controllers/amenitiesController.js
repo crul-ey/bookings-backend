@@ -1,96 +1,72 @@
-import { getAllAmenities } from '../services/amenities/getAllAmenities.js';
-import { getAmenityById } from '../services/amenities/getAmenityById.js';
-import { createAmenity } from '../services/amenities/createAmenity.js';
-import { updateAmenity } from '../services/amenities/updateAmenity.js';
-import { deleteAmenity } from '../services/amenities/deleteAmenity.js';
+import {
+  getAllAmenities,
+  getAmenityById,
+  createAmenity,
+  updateAmenity,
+  deleteAmenity,
+} from '../services/amenitiesService.js';
 
-// ✅ GET /amenities – alle voorzieningen ophalen
-export const getAllAmenitiesController = async (req, res) => {
+// ✅ GET /amenities
+export async function getAmenities(req, res, next) {
   try {
     const amenities = await getAllAmenities();
-    res.status(200).json(amenities);
-  } catch (error) {
-    console.error('❌ Error fetching amenities:', error.message);
-    res.status(500).json({ error: 'Server error while fetching amenities' });
+    res.json(amenities);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ GET /amenities/:id – één voorziening ophalen
-export const getAmenityByIdController = async (req, res) => {
+// ✅ GET /amenities/:id
+export async function getAmenity(req, res, next) {
   try {
     const amenity = await getAmenityById(req.params.id);
-
     if (!amenity) {
-      return res.status(404).json({ error: 'Amenity not found' });
+      return res.status(404).json({ error: 'Amenity niet gevonden' });
     }
-
-    res.status(200).json(amenity);
-  } catch (error) {
-    console.error('❌ Error fetching amenity:', error.message);
-    res.status(500).json({ error: 'Server error while fetching amenity' });
+    res.json(amenity);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ POST /amenities – nieuwe voorziening aanmaken
-export const createAmenityController = async (req, res) => {
+// ✅ POST /amenities
+export async function postAmenity(req, res, next) {
   try {
     const { name } = req.body;
 
-    if (!name) {
-      return res.status(400).json({ error: 'Name is required' });
+    if (!name || name.length < 2) {
+      return res.status(400).json({ error: 'Naam is verplicht en moet minimaal 2 tekens bevatten.' });
     }
 
-    const newAmenity = await createAmenity(name);
-    res.status(201).json({ id: newAmenity.id });
-  } catch (error) {
-    console.error('❌ Error creating amenity:', error.message);
-    res.status(500).json({ error: 'Server error while creating amenity' });
+    const newAmenity = await createAmenity({ name });
+    res.status(201).json(newAmenity);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ PUT /amenities/:id – voorziening bijwerken
-export const updateAmenityController = async (req, res) => {
+// ✅ PUT /amenities/:id
+export async function putAmenity(req, res, next) {
   try {
-    const { name } = req.body;
-
-    if (!name) {
-      return res.status(400).json({ error: 'Name is required' });
+    const updatedAmenity = await updateAmenity(req.params.id, req.body);
+    if (!updatedAmenity) {
+      return res.status(404).json({ error: 'Amenity niet gevonden' });
     }
-
-    const updatedAmenity = await updateAmenity(req.params.id, name);
-    res.status(200).json(updatedAmenity);
-  } catch (error) {
-    console.error('❌ Error updating amenity:', error.message);
-
-    if (error.code === 'P2025') {
-      res.status(404).json({ error: 'Amenity not found' });
-    } else {
-      res.status(500).json({ error: 'Server error while updating amenity' });
-    }
+    res.json(updatedAmenity);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ DELETE /amenities/:id – voorziening verwijderen
-export const deleteAmenityController = async (req, res) => {
+// ✅ DELETE /amenities/:id
+export async function removeAmenity(req, res, next) {
   try {
-    await deleteAmenity(req.params.id);
-    res.status(200).json({ message: 'Amenity deleted successfully' });
-  } catch (error) {
-    console.error('❌ Error deleting amenity:', error.message);
-
-    if (error.code === 'P2025') {
-      res.status(404).json({ error: 'Amenity not found' });
-    } else {
-      res.status(500).json({ error: 'Server error while deleting amenity' });
+    const deletedAmenity = await deleteAmenity(req.params.id);
+    if (!deletedAmenity) {
+      return res.status(404).json({ error: 'Amenity niet gevonden' });
     }
+    res.status(200).json({ message: 'Amenity verwijderd' });
+  } catch (err) {
+    next(err);
   }
-};
-
-
-export {
-  getAllAmenitiesController as getAllAmenities,
-  getAmenityByIdController as getAmenityById,
-  createAmenityController as createAmenity,
-  updateAmenityController as updateAmenity,
-  deleteAmenityController as deleteAmenity, 
 }

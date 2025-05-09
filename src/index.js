@@ -1,58 +1,64 @@
+// 📦 Entry point van de applicatie
 import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
 import morgan from 'morgan';
-import * as Sentry from '@sentry/node'; // verbeterd: goede importstijl
-import userRoutes from './routes/users.js';
-import authRoutes from './routes/auth.js'; // login route
-import hostRoutes from './routes/hosts.js'; // host route
-import propertyRoutes from './routes/properties.js'; // property route
-import bookingRoutes from './routes/bookings.js'; // booking route
-import reviewsRoutes from './routes/reviews.js'; // review route
-import amenitiesRoutes from './routes/amenities.js'; // amenities route
-import { sentryErrorHandler, generalErrorHandler } from './middleware/errorHandler.js';
-// import authenticateToken from './middleware/auth.js'; (voor later als we auth toevoegen)
+import dotenv from 'dotenv';
+import * as Sentry from '@sentry/node';
+import { errorHandler } from './middleware/errorHandler.js';
 
+// 📄 Laad environment variabelen
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// ✅ Sentry setup (voor error monitoring)
+// 🛡️ Initialiseer Sentry monitoring
 Sentry.init({
-  dsn: process.env.SENTRY_DSN || '',
+  dsn: process.env.SENTRY_DSN || '', // fallback bij ontbreken
   tracesSampleRate: 1.0,
+  environment: process.env.NODE_ENV || 'development',
 });
 
-console.log('✅ Sentry initialized');
+// 🚀 Maak Express app aan
+const app = express();
 
-// ✅ Middleware
+// 🧠 Sentry request logger (moet vóór routes)
 app.use(Sentry.Handlers.requestHandler());
+
+// 🔍 HTTP-request logging (kleur + timing)
+app.use(morgan('[EvaAPI] :method :url => :status (:response-time ms)'));
+
+// 📦 JSON body parser
 app.use(express.json());
-app.use(cors());
-app.use(morgan('dev'));
 
-// ✅ Routes
-app.use('/users', userRoutes);
-app.use('/auth', authRoutes);
-app.use('/hosts', hostRoutes);
-app.use('/properties', propertyRoutes);
-app.use('/bookings', bookingRoutes);
-app.use('/reviews', reviewsRoutes);
+// 🔗 API Routes
+import authRoutes from './routes/authRoutes.js';
+import usersRoutes from './routes/usersRoutes.js';
+import hostsRoutes from './routes/hostsRoutes.js';
+import propertiesRoutes from './routes/propertiesRoutes.js';
+import amenitiesRoutes from './routes/amenitiesRoutes.js';
+import bookingsRoutes from './routes/bookingsRoutes.js';
+import reviewsRoutes from './routes/reviewsRoutes.js';
+
+app.use('/login', authRoutes);
+app.use('/users', usersRoutes);
+app.use('/hosts', hostsRoutes);
+app.use('/properties', propertiesRoutes);
 app.use('/amenities', amenitiesRoutes);
+app.use('/bookings', bookingsRoutes);
+app.use('/reviews', reviewsRoutes);
 
-// ✅ Health check route
-app.get('/', (req, res) => {
-  res.send('📦 Bookings API is running');
+// ⚠️ 404 fallback voor onbekende routes
+app.use((req, res, next) => {
+  const error = new Error(`❌ Endpoint ${req.originalUrl} niet gevonden`);
+  error.statusCode = 404;
+  next(error);
 });
 
-// ✅ Error handling middleware
-app.use(sentryErrorHandler);     // Eerst Sentry errors
-app.use(generalErrorHandler);    // Daarna algemene errors
+// ❌ Sentry error handler (vóór custom handler)
+app.use(Sentry.Handlers.errorHandler());
 
-// ✅ Server starten
+// 🧯 Custom error handler (JSON output)
+app.use(errorHandler);
+
+// 🟢 Start server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server is listening on port ${PORT}`);
+  console.log(`🚀 Server draait op http://localhost:${PORT}`);
 });
-
-export default app; // (optioneel: handig voor testing)

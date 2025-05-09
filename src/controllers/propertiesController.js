@@ -1,66 +1,41 @@
-import { getAllProperties } from '../services/properties/getAllProperties.js';
-import { getPropertyById } from '../services/properties/getPropertyById.js';
-import { createProperty } from '../services/properties/createProperty.js';
-import { updateProperty } from '../services/properties/updateProperty.js';
-import { deleteProperty } from '../services/properties/deleteProperty.js';
+import {
+  getAllProperties,
+  getPropertyById,
+  createProperty,
+  updateProperty,
+  deleteProperty,
+} from '../services/propertiesService.js';
 
-// ✅ GET /properties – met filtering op location, pricePerNight, amenities
-export const getAllPropertiesController = async (req, res) => {
+export async function getProperties(req, res, next) {
   try {
-    const { location, pricePerNight, amenities } = req.query;
+    const filters = {
+      location: req.query.location,
+      pricePerNight: req.query.pricePerNight,
+      amenities: req.query.amenities,
+    };
 
-    const filters = {};
-
-    if (location) {
-      filters.location = {
-        contains: location,
-        mode: 'insensitive',
-      };
-    }
-
-    if (pricePerNight) {
-      filters.pricePerNight = parseFloat(pricePerNight);
-    }
-
-    const properties = await getAllProperties(Object.keys(filters).length > 0 ? filters : undefined);
-
-    // Client-side filter voor amenities
-    let filteredProperties = properties;
-
-    if (amenities) {
-      const requestedAmenity = amenities.toLowerCase();
-      filteredProperties = properties.filter((property) =>
-        property.amenities.some((a) =>
-          a.amenity.name.toLowerCase().includes(requestedAmenity)
-        )
-      );
-    }
-
-    res.status(200).json(filteredProperties);
-  } catch (error) {
-    console.error('❌ Error fetching properties:', error.message);
-    res.status(500).json({ error: 'Internal server error' });
+    const properties = await getAllProperties(filters);
+    res.json(properties);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ GET /properties/:id – specifieke property ophalen
-export const getPropertyByIdController = async (req, res) => {
+export async function getProperty(req, res, next) {
   try {
     const property = await getPropertyById(req.params.id);
-
     if (!property) {
-      return res.status(404).json({ error: 'Property not found' });
+      const error = new Error('Property niet gevonden');
+      error.statusCode = 404;
+      return next(error);
     }
-
-    res.status(200).json(property);
-  } catch (error) {
-    console.error('❌ Error fetching property by ID:', error.message);
-    res.status(500).json({ error: 'Internal server error' });
+    res.json(property);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ POST /properties – nieuwe property aanmaken
-export const createPropertyController = async (req, res) => {
+export async function postProperty(req, res, next) {
   try {
     const {
       title,
@@ -70,12 +45,41 @@ export const createPropertyController = async (req, res) => {
       bedroomCount,
       bathRoomCount,
       maxGuestCount,
-      rating,
       hostId,
+      rating
     } = req.body;
 
-    if (!title || !description || !location || !pricePerNight || !hostId) {
-      return res.status(400).json({ error: 'Missing required fields' });
+    // Validaties
+    if (!title || title.length < 3) {
+      return res.status(400).json({ error: "Titel is verplicht en moet minimaal 3 tekens bevatten." });
+    }
+
+    if (!description || description.length < 10) {
+      return res.status(400).json({ error: "Beschrijving is verplicht en moet minimaal 10 tekens bevatten." });
+    }
+
+    if (!location) {
+      return res.status(400).json({ error: "Locatie is verplicht." });
+    }
+
+    if (typeof pricePerNight !== 'number' || pricePerNight <= 0) {
+      return res.status(400).json({ error: "Prijs per nacht moet een positief getal zijn." });
+    }
+
+    if (!Number.isInteger(bedroomCount) || bedroomCount < 0) {
+      return res.status(400).json({ error: "Aantal slaapkamers moet een niet-negatief geheel getal zijn." });
+    }
+
+    if (!Number.isInteger(bathRoomCount) || bathRoomCount < 0) {
+      return res.status(400).json({ error: "Aantal badkamers moet een niet-negatief geheel getal zijn." });
+    }
+
+    if (!Number.isInteger(maxGuestCount) || maxGuestCount < 1) {
+      return res.status(400).json({ error: "Max aantal gasten moet minimaal 1 zijn." });
+    }
+
+    if (!hostId || typeof hostId !== 'string') {
+      return res.status(400).json({ error: "hostId is verplicht en moet een string zijn." });
     }
 
     const newProperty = await createProperty({
@@ -86,56 +90,67 @@ export const createPropertyController = async (req, res) => {
       bedroomCount,
       bathRoomCount,
       maxGuestCount,
-      rating,
       hostId,
+      rating
     });
 
-    res.status(201).json({ id: newProperty.id });
-  } catch (error) {
-    console.error('❌ Error creating property:', error.message);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(201).json(newProperty);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ PUT /properties/:id – property bijwerken
-export const updatePropertyController = async (req, res) => {
+export async function putProperty(req, res, next) {
   try {
-    const updatedProperty = await updateProperty(req.params.id, req.body);
+    const {
+      title,
+      description,
+      location,
+      pricePerNight,
+      bedroomCount,
+      bathRoomCount,
+      maxGuestCount,
+      hostId,
+      rating
+    } = req.body;
 
-    res.status(200).json(updatedProperty);
-  } catch (error) {
-    console.error('❌ Error updating property:', error.message);
-
-    if (error.code === 'P2025') {
-      res.status(404).json({ error: 'Property not found' });
-    } else {
-      res.status(500).json({ error: 'Internal server error' });
+    // Validaties (optioneel per veld)
+    if (title && title.length < 3) {
+      return res.status(400).json({ error: "Titel moet minimaal 3 tekens bevatten." });
     }
-  }
-};
 
-// ✅ DELETE /properties/:id – property verwijderen
-export const deletePropertyController = async (req, res) => {
+    if (description && description.length < 10) {
+      return res.status(400).json({ error: "Beschrijving moet minimaal 10 tekens bevatten." });
+    }
+
+    if (pricePerNight !== undefined && (typeof pricePerNight !== 'number' || pricePerNight <= 0)) {
+      return res.status(400).json({ error: "Prijs per nacht moet een positief getal zijn." });
+    }
+
+    if (bedroomCount !== undefined && (!Number.isInteger(bedroomCount) || bedroomCount < 0)) {
+      return res.status(400).json({ error: "Aantal slaapkamers moet een niet-negatief geheel getal zijn." });
+    }
+
+    if (bathRoomCount !== undefined && (!Number.isInteger(bathRoomCount) || bathRoomCount < 0)) {
+      return res.status(400).json({ error: "Aantal badkamers moet een niet-negatief geheel getal zijn." });
+    }
+
+    if (maxGuestCount !== undefined && (!Number.isInteger(maxGuestCount) || maxGuestCount < 1)) {
+      return res.status(400).json({ error: "Max aantal gasten moet minimaal 1 zijn." });
+    }
+
+    const updated = await updateProperty(req.params.id, req.body);
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function removeProperty(req, res, next) {
   try {
     await deleteProperty(req.params.id);
-
-    res.status(200).json({ message: 'Property deleted successfully' });
-  } catch (error) {
-    console.error('❌ Error deleting property:', error.message);
-
-    if (error.code === 'P2025') {
-      res.status(404).json({ error: 'Property not found' });
-    } else {
-      res.status(500).json({ error: 'Internal server error' });
-    }
+    res.status(204).end();
+  } catch (err) {
+    next(err);
   }
-};
-
-
-export { 
-  getAllPropertiesController as getAllProperties,
-  getPropertyByIdController as getPropertyById,
-  createPropertyController as createProperty,
-  updatePropertyController as updateProperty,
-  deletePropertyController as deleteProperty,
 }

@@ -1,101 +1,110 @@
-import { getAllHosts } from '../services/hosts/getAllHosts.js';
-import { getHostById } from '../services/hosts/getHostById.js';
-import { createHost } from '../services/hosts/createHost.js';
-import { updateHost } from '../services/hosts/updateHost.js';
-import { deleteHost } from '../services/hosts/deleteHost.js';
+import {
+  getAllHosts,
+  getHostById,
+  createHost,
+  updateHost,
+  deleteHost,
+} from '../services/hostsService.js';
 
-// ✅ GET /hosts – met filtering op naam
-export const getAllHostsController = async (req, res) => {
+export async function getHosts(req, res, next) {
   try {
-    const { name } = req.query;
+    const filters = {
+      name: req.query.name,
+      email: req.query.email,
+      username: req.query.username,
+    };
 
-    const filters = {};
-    if (name) {
-      filters.name = { contains: name, mode: 'insensitive' };
-    }
-
-    const hosts = await getAllHosts(Object.keys(filters).length > 0 ? filters : undefined);
-
-    res.status(200).json(hosts);
-  } catch (error) {
-    console.error('❌ Error fetching hosts:', error.message);
-    res.status(500).json({ error: 'Server error while fetching hosts' });
+    const hosts = await getAllHosts(filters);
+    res.json(hosts);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ GET /hosts/:id
-export const getHostByIdController = async (req, res) => {
+export async function getHost(req, res, next) {
   try {
     const host = await getHostById(req.params.id);
-
     if (!host) {
-      return res.status(404).json({ error: 'Host not found' });
+      const error = new Error('Host niet gevonden');
+      error.statusCode = 404;
+      return next(error);
     }
-
-    res.status(200).json(host);
-  } catch (error) {
-    console.error('❌ Error fetching host:', error.message);
-    res.status(500).json({ error: 'Server error while fetching host' });
+    res.json(host);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ POST /hosts
-export const createHostController = async (req, res) => {
+export async function postHost(req, res, next) {
   try {
     const { username, password, name, email, phoneNumber, profilePicture, aboutMe } = req.body;
 
-    if (!username || !password || !email) {
-      return res.status(400).json({ error: 'Username, password en email zijn verplicht' });
+    // 🔐 Validaties
+    if (!username || username.length < 3) {
+      return res.status(400).json({ error: "Username is verplicht en moet minimaal 3 tekens bevatten." });
     }
 
-    const newHost = await createHost({ username, password, name, email, phoneNumber, profilePicture, aboutMe });
+    if (!password || password.length < 6) {
+      return res.status(400).json({ error: "Wachtwoord is verplicht en moet minimaal 6 tekens bevatten." });
+    }
 
-    res.status(201).json({ id: newHost.id });
-  } catch (error) {
-    console.error('❌ Error creating host:', error.message);
-    res.status(500).json({ error: 'Server error while creating host' });
+    if (!name || name.length < 2) {
+      return res.status(400).json({ error: "Naam is verplicht." });
+    }
+
+    if (!email || !email.includes("@") || !email.includes(".")) {
+      return res.status(400).json({ error: "Voer een geldig e-mailadres in." });
+    }
+
+    if (!phoneNumber || phoneNumber.length < 6) {
+      return res.status(400).json({ error: "Voer een geldig telefoonnummer in." });
+    }
+
+    // ✅ Host aanmaken
+    const newHost = await createHost({
+      username,
+      password,
+      name,
+      email,
+      phoneNumber,
+      profilePicture,
+      aboutMe,
+    });
+
+    res.status(201).json(newHost);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ PUT /hosts/:id
-export const updateHostController = async (req, res) => {
+export async function putHost(req, res, next) {
   try {
+    const existing = await getHostById(req.params.id);
+    if (!existing) {
+      const error = new Error("Host bestaat niet");
+      error.statusCode = 404;
+      return next(error);
+    }
+
     const updatedHost = await updateHost(req.params.id, req.body);
-
-    res.status(200).json(updatedHost);
-  } catch (error) {
-    console.error('❌ Error updating host:', error.message);
-
-    if (error.code === 'P2025') {
-      res.status(404).json({ error: 'Host not found' });
-    } else {
-      res.status(500).json({ error: 'Server error while updating host' });
-    }
+    res.json(updatedHost);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ DELETE /hosts/:id
-export const deleteHostController = async (req, res) => {
+export async function removeHost(req, res, next) {
   try {
-    await deleteHost(req.params.id);
-
-    res.status(200).json({ message: 'Host deleted successfully' });
-  } catch (error) {
-    console.error('❌ Error deleting host:', error.message);
-
-    if (error.code === 'P2025') {
-      res.status(404).json({ error: 'Host not found' });
-    } else {
-      res.status(500).json({ error: 'Server error while deleting host' });
+    const existing = await getHostById(req.params.id);
+    if (!existing) {
+      const error = new Error("Host bestaat niet");
+      error.statusCode = 404;
+      return next(error);
     }
+
+    await deleteHost(req.params.id);
+    res.status(204).end();
+  } catch (err) {
+    next(err);
   }
-};
-
-
-export {
-  getAllHostsController as getAllHosts,
-  getHostByIdController as getHostById,
-  createHostController as createHost,
-  updateHostController as updateHost,
-  deleteHostController as deleteHost,
-};
+}

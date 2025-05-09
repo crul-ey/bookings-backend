@@ -1,91 +1,77 @@
-import { getAllReviews } from '../services/reviews/getAllReviews.js';
-import { getReviewById } from '../services/reviews/getReviewById.js';
-import { createReview } from '../services/reviews/createReview.js';
-import { updateReview } from '../services/reviews/updateReview.js';
-import { deleteReview } from '../services/reviews/deleteReview.js';
+import {
+  getAllReviews,
+  getReviewById,
+  createReview,
+  updateReview,
+  deleteReview,
+} from '../services/reviewsService.js';
 
-// ✅ GET /reviews – alle reviews ophalen
-export const getAllReviewsController = async (req, res) => {
+// ✅ GET /reviews
+export async function getReviews(req, res, next) {
   try {
     const reviews = await getAllReviews();
-    res.status(200).json(reviews);
-  } catch (error) {
-    console.error('❌ Error fetching reviews:', error.message);
-    res.status(500).json({ error: 'Server error while fetching reviews' });
+    res.json(reviews);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ GET /reviews/:id – specifieke review ophalen
-export const getReviewByIdController = async (req, res) => {
+// ✅ GET /reviews/:id
+export async function getReview(req, res, next) {
   try {
     const review = await getReviewById(req.params.id);
-
     if (!review) {
-      return res.status(404).json({ error: 'Review not found' });
+      return res.status(404).json({ error: 'Review niet gevonden' });
     }
-
-    res.status(200).json(review);
-  } catch (error) {
-    console.error('❌ Error fetching review:', error.message);
-    res.status(500).json({ error: 'Server error while fetching review' });
+    res.json(review);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ POST /reviews – nieuwe review aanmaken
-export const createReviewController = async (req, res) => {
+// ✅ POST /reviews
+export async function postReview(req, res, next) {
   try {
     const { userId, propertyId, rating, comment } = req.body;
 
-    if (!userId || !propertyId || !rating) {
-      return res.status(400).json({ error: 'userId, propertyId en rating zijn verplicht' });
+    // 🔐 Validatie
+    if (!userId || !propertyId) {
+      return res.status(400).json({ error: 'userId en propertyId zijn verplicht.' });
+    }
+
+    if (typeof rating !== 'number' || rating < 1 || rating > 5) {
+      return res.status(400).json({ error: 'Rating moet een getal zijn tussen 1 en 5.' });
     }
 
     const newReview = await createReview({ userId, propertyId, rating, comment });
-
-    res.status(201).json({ id: newReview.id });
-  } catch (error) {
-    console.error('❌ Error creating review:', error.message);
-    res.status(500).json({ error: 'Server error while creating review' });
+    res.status(201).json(newReview);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ PUT /reviews/:id – review bijwerken
-export const updateReviewController = async (req, res) => {
+// ✅ PUT /reviews/:id
+export async function putReview(req, res, next) {
   try {
     const updatedReview = await updateReview(req.params.id, req.body);
-
-    res.status(200).json(updatedReview);
-  } catch (error) {
-    console.error('❌ Error updating review:', error.message);
-
-    if (error.code === 'P2025') {
-      res.status(404).json({ error: 'Review not found' });
-    } else {
-      res.status(500).json({ error: 'Server error while updating review' });
+    if (!updatedReview) {
+      return res.status(404).json({ error: 'Review niet gevonden' });
     }
+    res.json(updatedReview);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ DELETE /reviews/:id – review verwijderen
-export const deleteReviewController = async (req, res) => {
+// ✅ DELETE /reviews/:id
+export async function removeReview(req, res, next) {
   try {
-    await deleteReview(req.params.id);
-    res.status(200).json({ message: 'Review deleted successfully' });
-  } catch (error) {
-    console.error('❌ Error deleting review:', error.message);
-
-    if (error.code === 'P2025') {
-      res.status(404).json({ error: 'Review not found' });
-    } else {
-      res.status(500).json({ error: 'Server error while deleting review' });
+    const deletedReview = await deleteReview(req.params.id);
+    if (!deletedReview) {
+      return res.status(404).json({ error: 'Review niet gevonden' });
     }
+    res.status(200).json({ message: 'Review verwijderd' });
+  } catch (err) {
+    next(err);
   }
-};
-
-export {
-  getAllReviewsController as getAllReviews,
-  getReviewByIdController as getReviewById,
-  createReviewController as createReview,
-  updateReviewController as updateReview,
-  deleteReviewController as deleteReview,
 }

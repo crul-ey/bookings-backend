@@ -1,48 +1,115 @@
 import { PrismaClient } from '@prisma/client';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import bcrypt from 'bcrypt';
-import users from '../src/data/users.json' assert { type: 'json' };
-import hosts from '../src/data/hosts.json' assert { type: 'json' };
-import properties from '../src/data/properties.json' assert { type: 'json' };
-import amenities from '../src/data/amenities.json' assert { type: 'json' };
-import bookings from '../src/data/bookings.json' assert { type: 'json' };
-import reviews from '../src/data/reviews.json' assert { type: 'json' };
 
 const prisma = new PrismaClient();
-const SALT_ROUNDS = 10;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function loadJSON(fileName) {
+  const filePath = path.join(__dirname, '../src/data', fileName);
+  const fileData = fs.readFileSync(filePath, 'utf-8');
+  return JSON.parse(fileData);
+}
+
+// Leeg de tabellen in juiste volgorde
+await prisma.review.deleteMany();
+await prisma.booking.deleteMany();
+await prisma.property.deleteMany();
+await prisma.amenity.deleteMany();
+await prisma.host.deleteMany();
+await prisma.user.deleteMany();
 
 async function main() {
-  // ✅ USERS
-  const hashedUsers = await Promise.all(
-    users.users.map(async (user) => ({
-      ...user,
-      password: await bcrypt.hash(user.password, SALT_ROUNDS),
-    }))
-  );
-  await prisma.user.createMany({ data: hashedUsers });
+  console.log("🔁 Start met inladen van JSON-bestanden...");
 
-  // ✅ HOSTS
-  const hashedHosts = await Promise.all(
-    hosts.hosts.map(async (host) => ({
-      ...host,
-      password: await bcrypt.hash(host.password, SALT_ROUNDS),
-    }))
-  );
-  await prisma.host.createMany({ data: hashedHosts });
+  // Laad data uit JSON-bestanden
+  const usersRaw = loadJSON('users.json').users || [];
+  const hostsRaw = loadJSON('hosts.json').hosts || [];
+  const propertiesRaw = loadJSON('properties.json').properties || [];
+  const bookings = loadJSON('bookings.json').bookings || [];
+  const reviews = loadJSON('reviews.json').reviews || [];
+  const amenities = loadJSON('amenities.json').amenities || [];
 
-  // ✅ REST
-  await prisma.property.createMany({ data: properties.properties });
-  await prisma.amenity.createMany({ data: amenities.amenities });
-  await prisma.booking.createMany({ data: bookings.bookings });
-  await prisma.review.createMany({ data: reviews.reviews });
+  console.log("📥 Data ingelezen:");
+  console.log(`  👤 Users: ${usersRaw.length}`);
+  console.log(`  🏠 Hosts: ${hostsRaw.length}`);
+  console.log(`  🏡 Properties: ${propertiesRaw.length}`);
+  console.log(`  📅 Bookings: ${bookings.length}`);
+  console.log(`  📝 Reviews: ${reviews.length}`);
+  console.log(`  🧂 Amenities: ${amenities.length}`);
+
+  // 🔐 Users en hosts voorbereiden
+  const users = usersRaw.map(({ id, username, password, name, email, phoneNumber, profilePicture }) => ({
+    id,
+    username,
+    password: bcrypt.hashSync(password, 10),
+    name,
+    email,
+    phoneNumber,
+    profilePicture,
+    role: "user"
+  }));
+
+  const hosts = hostsRaw.map(({ id, username, password, name, email, phoneNumber, profilePicture, aboutMe }) => ({
+    id,
+    username,
+    password: bcrypt.hashSync(password, 10),
+    name,
+    email,
+    phoneNumber,
+    profilePicture,
+    aboutMe,
+    role: "host"
+  }));
+
+  console.log("📦 Data voorbereiden en toevoegen aan database...");
+
+  await prisma.user.createMany({ data: users });
+  console.log("✅ Users toegevoegd");
+
+  await prisma.host.createMany({ data: hosts });
+  console.log("✅ Hosts toegevoegd");
+
+  // 🔄 Haal hosts opnieuw op (om zeker te zijn van geldige IDs)
+  const createdHosts = await prisma.host.findMany();
+
+  // Koppel elk property-item aan een geldige hostId (round robin)
+  const properties = propertiesRaw.map((p, i) => ({
+    id: p.id,
+    title: p.title,
+    description: p.description,
+    location: p.location,
+    pricePerNight: p.pricePerNight,
+    bedroomCount: p.bedroomCount,
+    bathRoomCount: p.bathRoomCount,
+    maxGuestCount: p.maxGuestCount,
+    rating: p.rating,
+    hostId: createdHosts[i % createdHosts.length].id // ✅ gegarandeerd geldig
+  }));
+
+  await prisma.amenity.createMany({ data: amenities });
+  console.log("✅ Amenities toegevoegd");
+
+  await prisma.property.createMany({ data: properties });
+  console.log("✅ Properties toegevoegd");
+
+  await prisma.booking.createMany({ data: bookings });
+  console.log("✅ Bookings toegevoegd");
+
+  await prisma.review.createMany({ data: reviews });
+  console.log("✅ Reviews toegevoegd");
+
+  console.log("🌱 Seeding voltooid.");
 }
 
 main()
-  .then(() => {
-    console.log('✅ Database seeded successfully with hashed passwords!');
-    prisma.$disconnect();
-  })
   .catch((e) => {
-    console.error('❌ Error while seeding:', e);
-    prisma.$disconnect();
+    console.error("❌ Fout tijdens seeden:", e);
     process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
   });

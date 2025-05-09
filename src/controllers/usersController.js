@@ -1,103 +1,113 @@
-import { getAllUsers } from '../services/users/getAllUsers.js';
-import { getUserById } from '../services/users/getUserById.js';
-import { createUser } from '../services/users/createUser.js';
-import { updateUser } from '../services/users/updateUser.js';
-import { deleteUser } from '../services/users/deleteUser.js';
+import {
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+} from '../services/usersService.js';
 
-// ✅ GET /users – met filtering op username en email
-export const getAllUsersController = async (req, res) => {
+export async function getUsers(req, res, next) {
   try {
-    const { username, email } = req.query;
+    const filters = {
+      username: req.query.username,
+      email: req.query.email,
+    };
 
-    const filters = {};
-
-    if (username) {
-      filters.username = { contains: username, mode: 'insensitive' };
-    }
-
-    if (email) {
-      filters.email = { contains: email, mode: 'insensitive' };
-    }
-
-    const users = await getAllUsers(Object.keys(filters).length > 0 ? filters : undefined);
-
-    res.status(200).json(users);
-  } catch (error) {
-    console.error('❌ Error fetching users:', error.message);
-    res.status(500).json({ error: 'Server error while fetching users' });
+    const users = await getAllUsers(filters);
+    res.json(users);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ POST /users
-export const createUserController = async (req, res) => {
+export async function getUser(req, res, next) {
+  try {
+    const user = await getUserById(req.params.id);
+    if (!user) {
+      const error = new Error('User niet gevonden');
+      error.statusCode = 404;
+      return next(error);
+    }
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function postUser(req, res, next) {
   try {
     const { username, password, name, email, phoneNumber, profilePicture } = req.body;
 
-    if (!username || !password || !email) {
-      return res.status(400).json({ error: 'Username, password en email zijn verplicht' });
+    // 🔐 Validaties
+    if (!username || username.length < 3) {
+      return res.status(400).json({ error: "Username is verplicht en moet minimaal 3 tekens bevatten." });
     }
 
-    const newUser = await createUser({ username, password, name, email, phoneNumber, profilePicture });
+    if (!password || password.length < 6) {
+      return res.status(400).json({ error: "Wachtwoord is verplicht en moet minimaal 6 tekens bevatten." });
+    }
 
-    res.status(201).json({ id: newUser.id });
-  } catch (error) {
-    console.error('❌ Error creating user:', error.message);
-    res.status(500).json({ error: 'Failed to create user' });
+    if (!name || name.length < 2) {
+      return res.status(400).json({ error: "Naam is verplicht." });
+    }
+
+    if (!email || !email.includes("@") || !email.includes(".")) {
+      return res.status(400).json({ error: "Voer een geldig e-mailadres in." });
+    }
+
+    if (!phoneNumber || phoneNumber.length < 6) {
+      return res.status(400).json({ error: "Voer een geldig telefoonnummer in." });
+    }
+
+    // 👤 User aanmaken
+    const newUser = await createUser({
+      username,
+      password,
+      name,
+      email,
+      phoneNumber,
+      profilePicture,
+    });
+
+    res.status(201).json(newUser);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ GET /users/:id
-export const getUserByIdController = async (req, res) => {
+export async function putUser(req, res, next) {
   try {
-    const user = await getUserById(req.params.id);
+    const { username, email, name, phoneNumber } = req.body;
 
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (username && username.length < 3) {
+      return res.status(400).json({ error: "Username moet minimaal 3 tekens bevatten." });
+    }
 
-    res.status(200).json(user);
-  } catch (error) {
-    console.error('❌ Error fetching user by ID:', error.message);
-    res.status(500).json({ error: 'Failed to get user' });
-  }
-};
+    if (email && (!email.includes("@") || !email.includes("."))) {
+      return res.status(400).json({ error: "Voer een geldig e-mailadres in." });
+    }
 
-// ✅ PUT /users/:id
-export const updateUserController = async (req, res) => {
-  try {
+    if (name && name.length < 2) {
+      return res.status(400).json({ error: "Naam is te kort." });
+    }
+
+    if (phoneNumber && phoneNumber.length < 6) {
+      return res.status(400).json({ error: "Ongeldig telefoonnummer." });
+    }
+
     const updatedUser = await updateUser(req.params.id, req.body);
-
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    console.error('❌ Error updating user:', error.message);
-
-    if (error.code === 'P2025') {
-      res.status(404).json({ error: 'User not found' });
-    } else {
-      res.status(500).json({ error: 'Failed to update user' });
-    }
+    res.json(updatedUser);
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-// ✅ DELETE /users/:id
-export const deleteUserController = async (req, res) => {
+
+export async function removeUser(req, res, next) {
   try {
     await deleteUser(req.params.id);
-
-    res.status(200).json({ message: 'User deleted' });
-  } catch (error) {
-    console.error('❌ Error deleting user:', error.message);
-
-    if (error.code === 'P2025') {
-      res.status(404).json({ error: 'User not found' });
-    } else {
-      res.status(500).json({ error: 'Failed to delete user' });
-    }
+    res.status(204).end();
+  } catch (err) {
+    next(err);
   }
-};
-
-export {
-  getAllUsersController as getAllUsers,
-  createUserController as createUser,
-  getUserByIdController as getUserById,
-  updateUserController as updateUser,
-  deleteUserController as deleteUser,
 }
